@@ -1,0 +1,2 @@
+# LEMSv2
+This is the repository for the second version of the LEMS Sensor Stations. Stay tuned, information will be added as it is generated. A majority of the documentation will be added to this file.
