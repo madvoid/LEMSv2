@@ -58,21 +58,21 @@ void setup () {
   Serial.print(deltaT);
   Serial.println(" second evenly divisible start point");
   DateTime now = rtc.now();
-  uint8_t nex;
+  uint8_t setSec;
   uint8_t rem = now.second() % deltaT;
   uint8_t lef = deltaT - rem;
   if (lef == 1) {
-    nex = 1 + deltaT;
+    setSec = 1 + deltaT;
   } else {
-    nex = lef;
+    setSec = lef;
   }
-  rtcAlarm1.alarmSecondsSet(now, nex);
+  rtcAlarm1.alarmSecondsSet(now, setSec);
 
   rtcAlarm1.alarmOn();
   Serial.print("Current Seconds: ");
   Serial.print(now.second());
   Serial.print(" || Setting alarm to ");
-  Serial.print(nex);
+  Serial.print(setSec);
   Serial.println(" seconds from now. Starting Loop...");
 }
 

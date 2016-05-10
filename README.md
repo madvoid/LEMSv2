@@ -1,6 +1,10 @@
 # LEMSv2
 This is the repository for the second version of the LEMS Sensor Stations. Stay tuned, information will be added as it is generated. A majority of the documentation will be added to this file.
 
+### TODO
+1. Create time set code that's easily accessible
+2. Keep documentation and File List updated
+
 ### File List
 * Data Sheets/
 	* `Adafruit Feather M0 ATWINC1500.pdf` - Adafruit instructions for Feather
