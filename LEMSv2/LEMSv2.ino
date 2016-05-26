@@ -11,6 +11,8 @@
 // Credits:
 //		Thanks to all the 3rd party libraries, especially to Adafruit for the excellent
 //		libraries and hardware. More specifics to be added as needed
+//    - Sleep code taken from https://github.com/rocketscream/Low-Power/blob/master/LowPower.cpp
+//      and from https://github.com/pubnub/samd21/blob/master/examples/Code/FirmwareUpgrade/ASF/sam0/drivers/system/system.h
 //
 // Requirements:
 //		- LEMS Hardware
@@ -22,19 +24,24 @@
 //      possibilities for code divergence. Be aware.
 //
 // Todo:
-//		- SD Card
 //		- All sensors
 //		- Wifi
-//		- Low Power Modes
-//    - LEDs - Add LEDs, green -> 5; red -> 6
+//		- Low Power Modes - Implement standby mode?
+//    - LEDs - Add LEDs
 //    - Preprocessor defs for different sensors
+//    - Pin list
 //
 // ------------------------------------------------------------------------------------------------
 
 
 
+// Sensor Defines: Plugged in sensors should be defined as 1 --------------------------------------
+#define TEMPRH 1
+#define IR 1
 
-// Defines ----------------------------------------------------------------------------------------
+
+
+// Other Defines ----------------------------------------------------------------------------------
 #define DEBUG 1
 #define GREEN_LED 13
 #define RED_LED 6
@@ -43,11 +50,14 @@
 
 
 // Libraries --------------------------------------------------------------------------------------
-#include <SD.h>			        // SD Card Library
-#include <SPI.h>		        // SPI Library
-#include <Wire.h>		        // I2C Library
-#include <RTClib.h>		      // RTC Library
-#include "DS3231_Alarm1.h"  // RTC Alarm Files
+#include <SD.h>			            // SD Card Library
+#include <SPI.h>		            // SPI Library
+#include <Wire.h>		            // I2C Library
+#include <SHT2x.h>              // SHT21 Library - https://github.com/misenso/SHT2x-Arduino-Library
+#include <RTClib.h>		          // RTC Library - https://github.com/adafruit/RTClib
+#include "DS3231_Alarm1.h"      // RTC Alarm Files
+#include <Adafruit_ADS1015.h>   // ADS1015 - https://github.com/adafruit/Adafruit_ADS1X15 
+#include <Adafruit_MLX90614.h>  // MLX90614 Library - https://github.com/adafruit/Adafruit-MLX90614-Library
 
 
 
@@ -60,8 +70,21 @@ volatile bool rtcFlag = false;  // Used for ISR to know when to take measurement
 const uint8_t deltaT = 10;      // Sampling time - Seconds
 
 // SD Card
-File logfile;
-char filename[] = "LEMXX_00.CSV";
+File logfile;                       // File object
+char filename[] = "LEMXX_00.CSV";   // Initial filename
+
+// MLX90614
+#if IR
+float mlxIR;                                   // IR values from MLX90614
+float mlxAmb;                                  // Ambient temp values from MLX90614
+Adafruit_MLX90614 mlx = Adafruit_MLX90614();   // MLX90614 class
+#endif
+
+// SHT21
+#if TEMPRH
+float shtAmb;               // Ambient temp values from SHT21
+float shtHum;               // Relative humidity values from SHT21
+#endif
 
 
 
@@ -117,7 +140,15 @@ void setup() {
 #endif
 
   // Write Header - Debug header at end of setup()
+  // Sensors also initiated here
   logfile.print("Year,Month,Date,Hour,Minute,Second");
+#if IR
+  mlx.begin();
+  logfile.print(",MLX_IR_C,MLX_Amb_C");
+#endif
+#if TEMPRH
+  logfile.print(",SHT_Amb_C,SHT_Hum_Pct");
+#endif
   logfile.println();
 
   // Delay and indicate start
@@ -166,6 +197,14 @@ void loop() {
 
   // Gather Measurements
   DateTime now = rtc.now();
+#if IR
+  mlxIR = mlx.readObjectTempC();
+  mlxAmb = mlx.readAmbientTempC();
+#endif
+#if TEMPRH
+  shtAmb = SHT2x.GetTemperature();
+  shtHum = SHT2x.GetHumidity();
+#endif
 
   // Log Data
   logfile.print(now.year(), DEC);
@@ -179,6 +218,18 @@ void loop() {
   logfile.print(now.minute(), DEC);
   logfile.print(",");
   logfile.print(now.second(), DEC);
+#if IR
+  logfile.print(",");
+  logfile.print(mlxIR);
+  logfile.print(",");
+  logfile.print(mlxAmb);
+#endif
+#if TEMPRH
+  logfile.print(",");
+  logfile.print(shtAmb);
+  logfile.print(",");
+  logfile.print(shtHum);
+#endif
   logfile.println();
   logfile.flush();
 
@@ -196,6 +247,18 @@ void loop() {
   Serial.print(now.minute(), DEC);
   Serial.print(",");
   Serial.print(now.second(), DEC);
+#if IR
+  Serial.print(",");
+  Serial.print(mlxIR);
+  Serial.print(",");
+  Serial.print(mlxAmb);
+#endif
+#if TEMPRH
+  Serial.print(",");
+  Serial.print(shtAmb);
+  Serial.print(",");
+  Serial.print(shtHum);
+#endif
   Serial.println();
 #endif
 
@@ -228,3 +291,4 @@ void error(String errorMsg) {
 void rtcISR(void) {
   rtcFlag = true;
 }
+

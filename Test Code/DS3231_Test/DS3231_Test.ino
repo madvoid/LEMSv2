@@ -14,6 +14,7 @@
 RTC_DS3231 rtc;
 DS3231_Alarm1 rtcAlarm1;
 volatile bool rtcFlag = false;
+bool ledFlag = true;
 const uint8_t deltaT = 10;  // Seconds
 
 
@@ -21,9 +22,9 @@ const uint8_t deltaT = 10;  // Seconds
 
 void setup () {
 
-#ifndef ESP8266
-  while (!Serial); // for Leonardo/Micro/Zero
-#endif
+  //#ifndef ESP8266
+  //  while (!Serial); // for Leonardo/Micro/Zero
+  //#endif
 
   pinMode(LEDPIN, OUTPUT);
 
@@ -46,7 +47,7 @@ void setup () {
   }
 
   // Uncomment following line if force time set is desired
-//  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  //  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 
 
   // Attach interrupt. Until sleep modes figured out, use while loop to emulate sleep mode
@@ -80,9 +81,11 @@ void setup () {
 
 
 void loop () {
-  digitalWrite(LEDPIN, rtcFlag);
+//  digitalWrite(LEDPIN, rtcFlag);
   while (!rtcFlag);
-  digitalWrite(LEDPIN, rtcFlag);
+//    idleSleep(0x02);
+//  digitalWrite(LEDPIN, rtcFlag);
+  digitalWrite(LEDPIN, ledFlag);
 
   DateTime now = rtc.now();
   Serial.print(now.year(), DEC);
@@ -99,6 +102,7 @@ void loop () {
   Serial.println();
   rtcAlarm1.alarmSecondsSet(now, deltaT);
   rtcFlag = false;
+  ledFlag = !ledFlag;
 }
 
 
@@ -107,4 +111,18 @@ void loop () {
 void rtcISR(void) {
   rtcFlag = true;
 }
+
+
+// Sleep function. Variable idleMode can take values from 0x00 to 0x02,
+// where 0x00 is "lightest" sleep and 0x02 is the deepest idle sleep
+void idleSleep(uint8_t idleMode) {
+  if (idleMode > 0x02) {
+    idleMode = 0x02;
+  }
+  SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+  PM->SLEEP.reg = idleMode;
+  __DSB();
+  __WFI();
+}
+
 
