@@ -1,9 +1,18 @@
 # LEMSv2
 This is the repository for the second version of the LEMS Sensor Stations. Stay tuned, information will be added as it is generated. A majority of the documentation will be added to this file.
 
-### TODO
+### General TODO
 1. Create time set code that's easily accessible
 2. Keep documentation and File List updated
+3. Devleop WiFi Code
+4. Develop SDI-12 code
+5. Investigate Serial multiplexing for multiple 5TMs on one serial port
+
+### PCB TODO
+1. Put solder jumper between enable pin and ground for optional regulator shutdown
+2. Put space for 5V regulator. 5V regulator runs to BAT_IN on arduino
+3. Solder jumper on enable pin. Default open and NOT connected to ground
+
 
 ### File List
 * `Bill of Materials.xlsx`	- Complete parts list
