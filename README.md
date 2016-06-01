@@ -15,7 +15,6 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 
 
 ### File List
-* `Bill of Materials.xlsx`	- Complete parts list
 * Data Sheets/
 	* `Adafruit Feather M0 ATWINC1500.pdf` - Adafruit instructions for Feather
 	* `ADS10105.pdf` - ADS1015 ADC
@@ -24,7 +23,10 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 	* `Feather Proto Pinout.png` - Pinout for Feather with protoboard. NOTE: Not exactly same as pinout for LEMSv2 Feather, but close.
 	* `MLX90614.pdf` - Melexis MLX90614 infrared temperature sensor datasheet
 	* `SHT21.pdf` - Sensirion SHT21 temperature/humidity sensor datasheet
-* `Hardware Description.xlsx` - Pinouts, connections, calibration constants etc.
+* Hardware Information/
+	* `Hardware Description.xlsx` - Pinouts, connections, calibration constants etc.
+	* `Bill of Materials.xlsx`	- Complete parts list
+	* Feather Eagle Files/ - Eagle files for Adafruit Feather
 * LEMSv2/
 	* `LEMSv2.ino` - LEMS Arduino Code
 	* `DS3231_Alarm1.h` - Header file for corresponding `.c` file

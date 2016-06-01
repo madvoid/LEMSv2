@@ -7,3 +7,6 @@
 *.s#?
 *.b#?
 *.l#?
+
+# RT1 Datasheet - Hopefully only temporary ignore
+Data\ Sheets/Decagon\ RT1.pdf
