@@ -11,7 +11,8 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 ### PCB TODO
 1. Put solder jumper between enable pin and ground for optional regulator shutdown
 2. Put space for 5V regulator. 5V regulator runs to BAT_IN on arduino
-3. Solder jumper on enable pin. Default open and NOT connected to ground
+3. Solder jumper on enable pin. Consider disabling the charger using enable pin, default closed?
+4. Put anti-static hardware?
 
 
 ### File List
