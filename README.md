@@ -2,11 +2,16 @@
 This is the repository for the second version of the LEMS Sensor Stations. Stay tuned, information will be added as it is generated. A majority of the documentation will be added to this file.
 
 ### General TODO
+1. Fix soil sensors
+2. Fix pressure sensors?
+3. Get lithium battery charger ciruit ready
+4. Compare lithium battery to lead acid
+5. Investigate MOSFET [voltage drop](http://electronics.stackexchange.com/questions/144607/do-mosfets-have-voltage-drop-across-source-and-drain-when-turned-on) and effect on accuracy
 1. Create time set code that's easily accessible
 2. Keep documentation and File List updated
 3. Devleop WiFi Code
 4. Develop SDI-12 code
-5. Investigate Serial multiplexing for multiple 5TMs on one serial port
+5. Investigate Serial multiplexing for multiple 5TMs on one serial port. For 5TMs to work well, level shifting will be required.
 
 ### PCB TODO
 1. Put solder jumper between enable pin and ground for optional regulator shutdown

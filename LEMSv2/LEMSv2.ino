@@ -25,6 +25,7 @@
 //
 // Todo:
 //		- All sensors
+//    - Make ADC generalizable. Replace all 4096
 //		- Wifi
 //		- Low Power Modes - Implement standby mode?
 //    - LEDs - Add LEDs, change pins
@@ -46,7 +47,7 @@
 
 
 // Other Defines ----------------------------------------------------------------------------------
-#define DEBUG 1
+#define DEBUG 0
 
 
 
@@ -71,9 +72,10 @@
 #include <SPI.h>		            // SPI Library
 #include <math.h>               // Math library - https://www.arduino.cc/en/Math/H
 #include <Wire.h>		            // I2C Library
-#include <SHT2x.h>              // SHT21 Library - https://github.com/misenso/SHT2x-Arduino-Library
 #include <RTClib.h>		          // RTC Library - https://github.com/adafruit/RTClib
 #include "DS3231_Alarm1.h"      // RTC Alarm Files
+#include <Adafruit_SHT31.h>     // SHT31 - https://github.com/adafruit/Adafruit_SHT31
+#include <Adafruit_Sensor.h>    // Necessary for BMP280 Code
 #include <Adafruit_BMP280.h>    // BMP280 - https://github.com/adafruit/Adafruit_BMP280_Library
 #include <Adafruit_ADS1015.h>   // ADS1015 - https://github.com/adafruit/Adafruit_ADS1X15 
 #include <Adafruit_MLX90614.h>  // MLX90614 Library - https://github.com/adafruit/Adafruit-MLX90614-Library
@@ -128,6 +130,7 @@ float wSpd;                         // Wind speed
 
 // SHT21
 #if TEMPRH
+Adafruit_SHT31 sht = Adafruit_SHT31();
 float shtAmb;               // Ambient temp values from SHT21
 float shtHum;               // Relative humidity values from SHT21
 #endif
@@ -152,6 +155,7 @@ void setup() {
   pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(CARDSELECT, OUTPUT);
+  analogReadResolution(12);
 
   // RTC Setup
   if (!rtc.begin()) {
@@ -207,6 +211,7 @@ void setup() {
   pinMode(WSPD_PIN, INPUT_PULLUP);
 #endif
 #if TEMPRH
+  sht.begin(0x44);    // Set to 0x45 for alt. i2c address
   logfile.print(",SHT_Amb_C,SHT_Hum_Pct");
 #endif
   logfile.println();
@@ -228,14 +233,14 @@ void setup() {
   rtcAlarm1.alarmOn();
   rtcFlag = false;
 #if DEBUG
-  Serial.print("Set RTC alarm to ");
+  Serial.print("Setting RTC alarm to ");
   Serial.print(deltaT);
   Serial.println(" second evenly divisible start point");
   Serial.print("Current Seconds: ");
   Serial.print(now.second());
   Serial.print(" || Setting alarm to ");
   Serial.print(setSec);
-  Serial.println(" seconds from now. Starting Loop...");
+  Serial.println(" seconds from now. Entering Loop...");
   //  Serial.print("Year,Month,Date,Hour,Minute,Second");
   Serial.println();
 #endif
@@ -251,6 +256,7 @@ void setup() {
 // ************************************************************************************************
 void loop() {
   // Wait for interrupt
+
   digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED off - This also deactivates the soil transistor
   while (!rtcFlag);
   digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED on - This also activates the soil transistor
@@ -270,12 +276,12 @@ void loop() {
   lowerMois = soilMois(analogRead(LSOILM_PIN));
 #endif
 #if PRESSURE
-  pressure = bmp.readPressure();
   bmpAmb = bmp.readTemperature();
+  pressure = bmp.readPressure();
 #endif
 #if TEMPRH
-  shtAmb = SHT2x.GetTemperature();
-  shtHum = SHT2x.GetHumidity();
+  shtAmb = sht.readTemperature();
+  shtHum = sht.readHumidity();
 #endif
 #if WIND
   wDir = (float)analogRead(WDIR_PIN) * 360.0 / 4096;  // Map from analog count to 0-360, with 360=North
