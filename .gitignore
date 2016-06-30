@@ -10,3 +10,6 @@
 
 # RT1 Datasheet - Hopefully only temporary ignore
 Data\ Sheets/Decagon\ RT1.pdf
+
+# Anything in Misc folder
+Miscellaneous/*

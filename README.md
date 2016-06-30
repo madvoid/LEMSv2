@@ -45,4 +45,8 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 		* `DS3231_Test.ino` - Test code for DS3231. Test square wave output with interrupts
 		* `DS3231_Alarm1.h` - Header file for corresponding `.c` file
 		* `DS3231_Alarm1.c` - File used to set DS3231 Alarm 1. Developed in here then copied to main code folder
+		
+### Acknowledgements
+* Thanks to [Sparkfun](https://www.sparkfun.com) and [Adafruit](https://www.adafruit.com) for Arduino libraries, components, tutorials, and eagle parts. Many designs and eagle components are directly used from them
+* 
 	
