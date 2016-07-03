@@ -13,3 +13,6 @@ Data\ Sheets/Decagon\ RT1.pdf
 
 # Anything in Misc folder
 Miscellaneous/*
+
+# Excel temporary
+~$*.xls*
