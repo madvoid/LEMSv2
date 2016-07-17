@@ -2,44 +2,46 @@
 This is the repository for the second version of the LEMS Sensor Stations. Stay tuned, information will be added as it is generated. A majority of the documentation will be added to this file.
 
 ### General TODO
-1. Fix soil sensors
-2. Fix pressure sensors?
-3. Get lithium battery charger ciruit ready
-4. Compare lithium battery to lead acid
-5. Investigate MOSFET [voltage drop](http://electronics.stackexchange.com/questions/144607/do-mosfets-have-voltage-drop-across-source-and-drain-when-turned-on) and effect on accuracy
+5. Investigate MOSFET as reverse voltage protection
 1. Create time set code that's easily accessible
 2. Keep documentation and File List updated
-3. Devleop WiFi Code
-4. Develop SDI-12 code
-5. Investigate Serial multiplexing for multiple 5TMs on one serial port. For 5TMs to work well, level shifting will be required.
+4. Try SDI-12 code
+6. Convert 5TM code into own library
+7. Refactor 5TM code
+8. Update everything for current setup
 
 ### PCB TODO
-1. Put solder jumper between enable pin and ground for optional regulator shutdown
-2. Put space for 5V regulator. 5V regulator runs to BAT_IN on arduino
-3. Solder jumper on enable pin. Consider disabling the charger using enable pin, default closed?
+2. Add 5V regulator
 4. Put anti-static hardware?
+5. Put reverse voltage hardware
+5. Consider assembly. Possible sources:
+	* https://www.screamingcircuits.com
+	* http://www.nexpcb.com
+	* http://www.4pcb.com
+	* http://www.tinkerbee.com/pcb-assembly-service.html/
+	* http://www.seeedstudio.com/fusion_pcb.html 
 
 
 ### File List
 * Data Sheets/
-	* `Adafruit Feather M0 ATWINC1500.pdf` - Adafruit instructions for Feather
-	* `ADS10105.pdf` - ADS1015 ADC
-	* `Atmel SAM D21.pdf` - Feather processor datasheet
-	* `DS3231.pdf` - Maxim DS3231 real time clock datasheet
-	* `Feather Proto Pinout.png` - Pinout for Feather with protoboard. NOTE: Not exactly same as pinout for LEMSv2 Feather, but close.
-	* `MLX90614.pdf` - Melexis MLX90614 infrared temperature sensor datasheet
-	* `SHT21.pdf` - Sensirion SHT21 temperature/humidity sensor datasheet
+	* Data sheets for components
 * Hardware Information/
-	* `Hardware Description.xlsx` - Pinouts, connections, calibration constants etc.
 	* `Bill of Materials.xlsx`	- Complete parts list
-	* Feather Eagle Files/ - Eagle files for Adafruit Feather
+	* Transimpedance Amplifier/
+		* `Transimpedance_Amplifier_Calculations.ipynb` - Jupyter notebook containing transimpedance amplifier calculations
 * LEMSv2/
 	* `LEMSv2.ino` - LEMS Arduino Code
 	* `DS3231_Alarm1.h` - Header file for corresponding `.c` file
 	* `DS3231_Alarm1.c` - File used to set DS3231 Alarm 1. Developed in test code then copied to this folder
 * LEMSv2 PCB/
-	* 
+	* `LEMSv2.sch` - LEMSv2 shield schematic
+* LEMSv2 PCB Library/ 
+	* `LEMSv2.lbr` - Parts used in the LEMSv2 shield
 * README.md - If you read this line you're actually reading the README. Good job!
+* Sensor Stick/
+	* `SensorStick.sch` - PCB schematic with sensors for easy assembly
+	* `SensorStick.brd` - PCB board with sensors for easy assembly
+	* `Bill of Materials.xslx` - Sensor stick BOM
 * Test Code/
 	* DS3231_Test/
 		* `DS3231_Test.ino` - Test code for DS3231. Test square wave output with interrupts

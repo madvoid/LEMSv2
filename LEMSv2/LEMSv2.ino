@@ -26,7 +26,6 @@
 // Todo:
 //		- All sensors
 //    - Make ADC generalizable. Replace all 4096
-//		- Wifi
 //		- Low Power Modes - Implement standby mode?
 //    - LEDs - Add LEDs, change pins
 //    - Line 196, print everything no more dynamic header?
@@ -52,18 +51,19 @@
 
 
 // Pin Defines ------------------------------------------------------------------------------------
-#define GREEN_LED_PIN 13    // Green LED pin - Change LED Pins in future!!
-#define RED_LED_PIN 6       // Red LED pin - Change LED Pins in future!!
+#define GREEN_LED_PIN 6     // Green LED pin - Change LED Pins in future!!
+#define RED_LED_PIN 7       // Red LED pin - Change LED Pins in future!!
 #define CARDSELECT 5        // Sd card chip select pin
-#define LSOILT_PIN A0       // Lower soil temperature pin
-#define USOILT_PIN A1       // Upper soil temperature pin
-#define LSOILM_PIN A2       // Lower soil moisture pin
-#define USOILM_PIN A3       // Upper soil moisture pin
-#define WDIR_PIN A4         // Davis wind direction pin
+#define RTC_ALARM_PIN 9     // DS3231 Alarm pin
 #define SUN_PIN A5          // Li200 solar radiation pin
-#define RTC_ALARM_PIN 12    // DS3231 Alarm pin
-#define SOIL_POW_PIN 11     // Soil transistor pin, gives power to soil sensors
-#define WSPD_PIN 10         // Davis wind speed pin
+#define WDIR_PIN A4         // Davis wind direction pin
+#define WSPD_PIN 8          // Davis wind speed pin
+#define USOIL_POW_PIN 2     // 5TM Power Pin, Upper
+#define LSOIL_POW_PIN 38    // 5TM Power Pin, Lower
+#define USOIL_SER Serial1   // 5TM Serial Port, Upper. RX = D0, TX = D1
+#define LSOIL_SER Serial    // 5TM Serial Port, Lower. RX = D31, TX = D30
+
+
 
 
 
@@ -77,7 +77,6 @@
 #include <Adafruit_SHT31.h>     // SHT31 - https://github.com/adafruit/Adafruit_SHT31
 #include <Adafruit_Sensor.h>    // Necessary for BMP280 Code
 #include <Adafruit_BMP280.h>    // BMP280 - https://github.com/adafruit/Adafruit_BMP280_Library
-#include <Adafruit_ADS1015.h>   // ADS1015 - https://github.com/adafruit/Adafruit_ADS1X15 
 #include <Adafruit_MLX90614.h>  // MLX90614 Library - https://github.com/adafruit/Adafruit-MLX90614-Library
 
 
@@ -145,10 +144,10 @@ float shtHum;               // Relative humidity values from SHT21
 void setup() {
 
 #if DEBUG
-  while (!Serial);
-  Serial.begin(9600);
+  while (!SerialUSB);
+  SerialUSB.begin(9600);
   delay(3000);
-  Serial.println("Starting Sketch");
+  SerialUSB.println("Starting Sketch");
 #endif
 
   // Set pins
@@ -185,8 +184,8 @@ void setup() {
     error("Couldn't Create File!");
   }
 #if DEBUG
-  Serial.print("Writing to ");
-  Serial.println(filename);
+  SerialUSB.print("Writing to ");
+  SerialUSB.println(filename);
 #endif
 
   // Write Header - Debug header at end of setup()
@@ -197,9 +196,15 @@ void setup() {
   logfile.print(",MLX_IR_C,MLX_Amb_C");
 #endif
 #if UPPERSOIL
+  USOIL_SER.begin(1200);
+  pinMode(USOIL_POW_PIN, OUTPUT);
+  digitalWrite(USOIL_POW_PIN, LOW);
   logfile.print(",Upper_Soil_Temp,Upper_Soil_Mois");
 #endif
 #if LOWERSOIL
+  LSOIL_SER.begin(1200);
+  pinMode(LSOIL_POW_PIN, OUTPUT);
+  digitalWrite(LSOIL_POW_PIN, LOW);
   logfile.print(",Lower_Soil_Temp,Lower_Soil_Mois");
 #endif
 #if PRESSURE
@@ -233,16 +238,16 @@ void setup() {
   rtcAlarm1.alarmOn();
   rtcFlag = false;
 #if DEBUG
-  Serial.print("Setting RTC alarm to ");
-  Serial.print(deltaT);
-  Serial.println(" second evenly divisible start point");
-  Serial.print("Current Seconds: ");
-  Serial.print(now.second());
-  Serial.print(" || Setting alarm to ");
-  Serial.print(setSec);
-  Serial.println(" seconds from now. Entering Loop...");
-  //  Serial.print("Year,Month,Date,Hour,Minute,Second");
-  Serial.println();
+  SerialUSB.print("Setting RTC alarm to ");
+  SerialUSB.print(deltaT);
+  SerialUSB.println(" second evenly divisible start point");
+  SerialUSB.print("Current Seconds: ");
+  SerialUSB.print(now.second());
+  SerialUSB.print(" || Setting alarm to ");
+  SerialUSB.print(setSec);
+  SerialUSB.println(" seconds from now. Entering Loop...");
+  //  SerialUSB.print("Year,Month,Date,Hour,Minute,Second");
+  SerialUSB.println();
 #endif
 
 } // End setup()
@@ -257,9 +262,9 @@ void setup() {
 void loop() {
   // Wait for interrupt
 
-  digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED off - This also deactivates the soil transistor
+  digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED off
   while (!rtcFlag);
-  digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED on - This also activates the soil transistor
+  digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED on
 
   // Gather Measurements
   DateTime now = rtc.now();
@@ -268,12 +273,10 @@ void loop() {
   mlxAmb = mlx.readAmbientTempC();
 #endif
 #if UPPERSOIL
-  upperTemp = soilTemp(analogRead(USOILT_PIN));
-  upperMois = soilMois(analogRead(USOILM_PIN));
+
 #endif
 #if LOWERSOIL
-  lowerTemp = soilTemp(analogRead(LSOILT_PIN));
-  lowerMois = soilMois(analogRead(LSOILM_PIN));
+
 #endif
 #if PRESSURE
   bmpAmb = bmp.readTemperature();
@@ -348,52 +351,52 @@ void loop() {
 
   // Debug Info
 #if DEBUG
-  Serial.print(now.year(), DEC);
-  Serial.print(", ");
-  Serial.print(now.month(), DEC);
-  Serial.print(", ");
-  Serial.print(now.day(), DEC);
-  Serial.print(", ");
-  Serial.print(now.hour(), DEC);
-  Serial.print(", ");
-  Serial.print(now.minute(), DEC);
-  Serial.print(", ");
-  Serial.print(now.second(), DEC);
+  SerialUSB.print(now.year(), DEC);
+  SerialUSB.print(", ");
+  SerialUSB.print(now.month(), DEC);
+  SerialUSB.print(", ");
+  SerialUSB.print(now.day(), DEC);
+  SerialUSB.print(", ");
+  SerialUSB.print(now.hour(), DEC);
+  SerialUSB.print(", ");
+  SerialUSB.print(now.minute(), DEC);
+  SerialUSB.print(", ");
+  SerialUSB.print(now.second(), DEC);
 #if IR
-  Serial.print(", ");
-  Serial.print(mlxIR);
-  Serial.print(", ");
-  Serial.print(mlxAmb);
+  SerialUSB.print(", ");
+  SerialUSB.print(mlxIR);
+  SerialUSB.print(", ");
+  SerialUSB.print(mlxAmb);
 #endif
 #if UPPERSOIL
-  Serial.print(", ");
-  Serial.print(upperTemp);
-  Serial.print(", ");
-  Serial.print(upperMois);
+  SerialUSB.print(", ");
+  SerialUSB.print(upperTemp);
+  SerialUSB.print(", ");
+  SerialUSB.print(upperMois);
 #endif
 #if LOWERSOIL
-  Serial.print(", ");
-  Serial.print(lowerTemp);
-  Serial.print(", ");
-  Serial.print(lowerMois);
+  SerialUSB.print(", ");
+  SerialUSB.print(lowerTemp);
+  SerialUSB.print(", ");
+  SerialUSB.print(lowerMois);
 #endif
 #if PRESSURE
-  Serial.print(",");
-  Serial.print(pressure);
-  Serial.print(",");
-  Serial.print(bmpAmb);
+  SerialUSB.print(",");
+  SerialUSB.print(pressure);
+  SerialUSB.print(",");
+  SerialUSB.print(bmpAmb);
 #endif
-  Serial.print(",");
-  Serial.print(wDir);
-  Serial.print(",");
-  Serial.print(wSpd);
+  SerialUSB.print(",");
+  SerialUSB.print(wDir);
+  SerialUSB.print(",");
+  SerialUSB.print(wSpd);
 #if TEMPRH
-  Serial.print(", ");
-  Serial.print(shtAmb);
-  Serial.print(", ");
-  Serial.print(shtHum);
+  SerialUSB.print(", ");
+  SerialUSB.print(shtAmb);
+  SerialUSB.print(", ");
+  SerialUSB.print(shtHum);
 #endif
-  Serial.println();
+  SerialUSB.println();
 #endif
 
   // Reset any variables and turn alarm on for next measurement
@@ -415,7 +418,7 @@ void loop() {
 // Turn red LED on and loop. Used in case of errors
 void error(String errorMsg) {
 #if DEBUG
-  Serial.println(errorMsg);
+  SerialUSB.println(errorMsg);
 #endif
 
   digitalWrite(RED_LED_PIN, HIGH);
@@ -435,19 +438,50 @@ void windCounter() {
 }
 
 
-// Function to convert analog read of RT-1 to temperature in C
-// See RT-1 datahseet for information
-double soilTemp(int aVal) {
-  double v = (aVal / 4096.0) * 3.3; // Convert adc result to voltage - 12-bit adc and 3.3v supply
-  double x = log((3.3 / v) - 1.0);
-  double T = -0.1087 * pow(x, 3) + 1.6066 * pow(x, 2) - 22.801 * x + 25.0;
-  return T;
-}
+// Function to parse packet received from 5TM
+void parse5TM(char input[], double &mois, double &temp) {
+  int values[3] = {0, 0, 0};                                                    // Moisture, place holder, temperature
+  int fieldIndex = 0;                                                           // Values index count
+  int check = 0;                                                                // Stop byte position
+
+  // Parse input string, store into values
+  for (int j = 0; j < strlen(input); j++) {                                     
+    if (input[j] >= '0' && input[j] <= '9' && fieldIndex < 3) {
+      values[fieldIndex] = (values[fieldIndex] * 10) + (input[j] - '0');
+    }
+    else if (input[j] == ' ') {                                                 // If character is space, increment values place
+      fieldIndex++;
+    }
+    else {                                                                      // Otherwise store length of measurement string
+      check = j;
+      break;
+    }
+  }
+  values[1] = int(input[strlen(input) - 3]);                                    // Store sensor side checksum in place holder part of values, save space
+
+  // Calculate arduino side checksum...
+  char crc = 0;                                                                 
+  for (int j = 0; j < check; j++) {
+    crc += input[j];
+  }
+  crc = (crc + 0xD + 'x') % 64 + 32;
+
+  // Calculate moisture and temperature
+  mois = 0.0000043 * pow(double(values[0]) / 50.0, 3) - 0.00055 * pow(double(values[0]) / 50.0, 2) + 0.0292 * (double(values[0]) / 50.0) - 0.053; // Calculate moisture with topp equation
+  if (values[2] <= 900) {                       // Calculate temperature...
+    temp = (double(values[2]) - 400.0) / 10.0;
+  }
+  if (values[2] > 900) {
+    temp = 900.0 + 5.0 * (double(values[2]) - 900.0);
+    temp = (temp - 400.0) / 10.0;
+  }
+  if ( values[1] != crc) {
+    mois = 0.0;
+    temp = -273.15;
+  }
+
+  // No return. Reference to multiple variables passed in
+} // end parse5TM()
 
 
-// Function to convert analog read of EC-5 to moisture in m^3/m^3
-double soilMois(int aVal) {
-  double mv = (aVal / 4096.0) * 3.3 * 1000.0; // Convert adc result to mV - 12-bit adc and 3.3v supply
-  double epsilon = 1.0 / (-3.3326e-9 * pow(mv, 3) + 7.01218e-6 * pow(mv, 2) - 5.11647e-3 * mv + 1.30746);
-  double vwc = 4.3e-6 * pow(epsilon, 3) - 5.5e-4 * pow(epsilon, 2) + 2.92e-2 * epsilon - 5.3e-2;
-}
+
