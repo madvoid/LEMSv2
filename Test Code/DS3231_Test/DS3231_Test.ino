@@ -1,6 +1,6 @@
 // DS3231_Test.ino
 // Nipun Gunawardena
-// Tests DS3231, with squarewave on and interrupts
+// Tests DS3231 Alarm1
 // Modified from DS3231 example in RTClib
 // Todo: Try sleep modes
 
@@ -28,17 +28,17 @@ void setup () {
 
   pinMode(LEDPIN, OUTPUT);
 
-  Serial.begin(9600);
+  SerialUSB.begin(9600);
   delay(3000);  // Wait for console opening
-  Serial.println("Starting Sketch");
+  SerialUSB.println("Starting Sketch");
 
   if (! rtc.begin()) {
-    Serial.println("Couldn't find RTC");
+    SerialUSB.println("Couldn't find RTC");
     while (1);
   }
 
   if (rtc.lostPower()) {
-    Serial.println("RTC lost power, lets set the time!");
+    SerialUSB.println("RTC lost power, lets set the time!");
     // following line sets the RTC to the date & time this sketch was compiled
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
     // This line sets the RTC with an explicit date & time, for example to set
@@ -55,9 +55,9 @@ void setup () {
 
   // Wait for even interval of deltaT to start measurements
   // If alarm set time is <1 second away, wait for next even value
-  Serial.print("Set Alarm to ");
-  Serial.print(deltaT);
-  Serial.println(" second evenly divisible start point");
+  SerialUSB.print("Set Alarm to ");
+  SerialUSB.print(deltaT);
+  SerialUSB.println(" second evenly divisible start point");
   DateTime now = rtc.now();
   uint8_t setSec;
   uint8_t rem = now.second() % deltaT;
@@ -70,11 +70,11 @@ void setup () {
   rtcAlarm1.alarmSecondsSet(now, setSec);
 
   rtcAlarm1.alarmOn();
-  Serial.print("Current Seconds: ");
-  Serial.print(now.second());
-  Serial.print(" || Setting alarm to ");
-  Serial.print(setSec);
-  Serial.println(" seconds from now. Starting Loop...");
+  SerialUSB.print("Current Seconds: ");
+  SerialUSB.print(now.second());
+  SerialUSB.print(" || Setting alarm to ");
+  SerialUSB.print(setSec);
+  SerialUSB.println(" seconds from now. Starting Loop...");
 }
 
 
@@ -88,18 +88,18 @@ void loop () {
   digitalWrite(LEDPIN, ledFlag);
 
   DateTime now = rtc.now();
-  Serial.print(now.year(), DEC);
-  Serial.print('/');
-  Serial.print(now.month(), DEC);
-  Serial.print('/');
-  Serial.print(now.day(), DEC);
-  Serial.print(" ");
-  Serial.print(now.hour(), DEC);
-  Serial.print(':');
-  Serial.print(now.minute(), DEC);
-  Serial.print(':');
-  Serial.print(now.second(), DEC);
-  Serial.println();
+  SerialUSB.print(now.year(), DEC);
+  SerialUSB.print('/');
+  SerialUSB.print(now.month(), DEC);
+  SerialUSB.print('/');
+  SerialUSB.print(now.day(), DEC);
+  SerialUSB.print(" ");
+  SerialUSB.print(now.hour(), DEC);
+  SerialUSB.print(':');
+  SerialUSB.print(now.minute(), DEC);
+  SerialUSB.print(':');
+  SerialUSB.print(now.second(), DEC);
+  SerialUSB.println();
   rtcAlarm1.alarmSecondsSet(now, deltaT);
   rtcFlag = false;
   ledFlag = !ledFlag;
