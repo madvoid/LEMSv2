@@ -5,24 +5,27 @@
 
 #include "d5TM.h"
 
-d5TM soil(Serial1, 1200);
+d5TM soil(Serial, 1200);
 
-void setup(){
+void setup() {
+  pinMode(13, OUTPUT);
   SerialUSB.begin(9600);
   SerialUSB.println("Initializing Soil Class");
-  soil.begin(2);  
+  soil.begin(38);
 }
 
 
 
-void loop(){
+void loop() {
+  digitalWrite(13, HIGH);
   soil.getMeasurements();
+  digitalWrite(13, LOW);
   SerialUSB.print("Temperature: ");
   SerialUSB.print(soil.temperature);
   SerialUSB.print(" :|: Moisture: ");
-  SerialUSB.print(soil.moisture);
+  SerialUSB.println(soil.moisture);
   SerialUSB.println();
-  
+
   delay(5000);
 }
 

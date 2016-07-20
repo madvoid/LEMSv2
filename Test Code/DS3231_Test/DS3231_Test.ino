@@ -81,10 +81,10 @@ void setup () {
 
 
 void loop () {
-//  digitalWrite(LEDPIN, rtcFlag);
+  //  digitalWrite(LEDPIN, rtcFlag);
   while (!rtcFlag);
-//    idleSleep(0x02);
-//  digitalWrite(LEDPIN, rtcFlag);
+  //    idleSleep(0x02);
+  //  digitalWrite(LEDPIN, rtcFlag);
   digitalWrite(LEDPIN, ledFlag);
 
   DateTime now = rtc.now();
@@ -125,4 +125,9 @@ void idleSleep(uint8_t idleMode) {
   __WFI();
 }
 
+// See https://forum.arduino.cc/index.php?topic=337289.0 for help
+void standbySleep(void) {
+  SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+  __WFI();
+}
 

@@ -46,13 +46,13 @@
 
 
 // Other Defines ----------------------------------------------------------------------------------
-#define DEBUG 0
+#define DEBUG 1
 
 
 
 // Pin Defines ------------------------------------------------------------------------------------
-#define GREEN_LED_PIN 6     // Green LED pin - Change LED Pins in future!!
-#define RED_LED_PIN 7       // Red LED pin - Change LED Pins in future!!
+#define GREEN_LED_PIN 13     // Green LED pin - Change to D6 when LEDs are attached
+#define RED_LED_PIN 7       // Red LED pin
 #define CARDSELECT 5        // Sd card chip select pin
 #define RTC_ALARM_PIN 9     // DS3231 Alarm pin
 #define SUN_PIN A5          // Li200 solar radiation pin
@@ -62,6 +62,7 @@
 #define LSOIL_POW_PIN 38    // 5TM Power Pin, Lower
 #define USOIL_SER Serial1   // 5TM Serial Port, Upper. RX = D0, TX = D1
 #define LSOIL_SER Serial    // 5TM Serial Port, Lower. RX = D31, TX = D30
+#define ADC_RES 12          // Number of bits ADC has
 
 
 
@@ -70,12 +71,13 @@
 // Libraries --------------------------------------------------------------------------------------
 #include <SD.h>			            // SD Card Library
 #include <SPI.h>		            // SPI Library
-#include <math.h>               // Math library - https://www.arduino.cc/en/Math/H
+#include "d5TM.h"               // 5TM Library
+#include <math.h>               // Math Library - https://www.arduino.cc/en/Math/H
 #include <Wire.h>		            // I2C Library
 #include <RTClib.h>		          // RTC Library - https://github.com/adafruit/RTClib
-#include "DS3231_Alarm1.h"      // RTC Alarm Files
+#include "DS3231_Alarm1.h"      // RTC Alarm Library Files
 #include <Adafruit_SHT31.h>     // SHT31 - https://github.com/adafruit/Adafruit_SHT31
-#include <Adafruit_Sensor.h>    // Necessary for BMP280 Code
+#include <Adafruit_Sensor.h>    // Necessary for BMP280 Code - https://github.com/adafruit/Adafruit_Sensor
 #include <Adafruit_BMP280.h>    // BMP280 - https://github.com/adafruit/Adafruit_BMP280_Library
 #include <Adafruit_MLX90614.h>  // MLX90614 Library - https://github.com/adafruit/Adafruit-MLX90614-Library
 
@@ -102,14 +104,12 @@ Adafruit_MLX90614 mlx = Adafruit_MLX90614();   // MLX90614 class
 
 // Upper soil
 #if UPPERSOIL
-float upperTemp;            // Upper soil temp
-float upperMois;            // Upper soil mois
+d5TM upperSoil(USOIL_SER, 1200);
 #endif
 
 // Lower soil
 #if LOWERSOIL
-float lowerTemp;            // Lower soil temp
-float lowerMois;            // Lower soil mois
+d5TM lowerSoil(LSOIL_SER, 1200);
 #endif
 
 // BMP280
@@ -125,6 +125,13 @@ unsigned long startTime;            // Used to measure averaging period for wind
 volatile unsigned long windCount;   // Counts to convert to speed
 float wDir;                         // Wind direction
 float wSpd;                         // Wind speed
+#endif
+
+#if SUNLIGHT
+unsigned int rawSun = 0;                // Word to hold 12 bit sunlight values
+const float liConst = 93.40E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
+const float ampResistor = 44300;        // Exact Resistor Value used by Op-Amp
+float sunlight = 0.0;                   // Converted Value
 #endif
 
 // SHT21
@@ -154,7 +161,7 @@ void setup() {
   pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(CARDSELECT, OUTPUT);
-  analogReadResolution(12);
+  analogReadResolution(ADC_RES);
 
   // RTC Setup
   if (!rtc.begin()) {
@@ -196,15 +203,11 @@ void setup() {
   logfile.print(",MLX_IR_C,MLX_Amb_C");
 #endif
 #if UPPERSOIL
-  USOIL_SER.begin(1200);
-  pinMode(USOIL_POW_PIN, OUTPUT);
-  digitalWrite(USOIL_POW_PIN, LOW);
+  upperSoil.begin(USOIL_POW_PIN);
   logfile.print(",Upper_Soil_Temp,Upper_Soil_Mois");
 #endif
 #if LOWERSOIL
-  LSOIL_SER.begin(1200);
-  pinMode(LSOIL_POW_PIN, OUTPUT);
-  digitalWrite(LSOIL_POW_PIN, LOW);
+  lowerSoil.begin(LSOIL_POW_PIN);
   logfile.print(",Lower_Soil_Temp,Lower_Soil_Mois");
 #endif
 #if PRESSURE
@@ -214,6 +217,9 @@ void setup() {
 #if WIND
   logfile.print(",Wind_Dir,Wind_Spd");
   pinMode(WSPD_PIN, INPUT_PULLUP);
+#endif
+#if SUNLIGHT
+  logfile.print(",Sunlight");
 #endif
 #if TEMPRH
   sht.begin(0x44);    // Set to 0x45 for alt. i2c address
@@ -273,21 +279,25 @@ void loop() {
   mlxAmb = mlx.readAmbientTempC();
 #endif
 #if UPPERSOIL
-
+  upperSoil.getMeasurements();
 #endif
 #if LOWERSOIL
-
+  lowerSoil.getMeasurements();
 #endif
 #if PRESSURE
   bmpAmb = bmp.readTemperature();
   pressure = bmp.readPressure();
+#endif
+#if SUNLIGHT
+  rawSun = analogRead(SUN_PIN);
+  sunlight = rawSun * (3.3 / pow(2, ADC_RES)) * (1 / ampResistor) * (1 / liConst); // Convert to W/m^2
 #endif
 #if TEMPRH
   shtAmb = sht.readTemperature();
   shtHum = sht.readHumidity();
 #endif
 #if WIND
-  wDir = (float)analogRead(WDIR_PIN) * 360.0 / 4096;  // Map from analog count to 0-360, with 360=North
+  wDir = (float)analogRead(WDIR_PIN) * 360.0 / pow(2, ADC_RES);  // Map from analog count to 0-360, with 360=North
   startTime = millis();
   attachInterrupt(WSPD_PIN, windCounter, RISING);     // Attach interrupt for wind speed pin
   while (millis() - startTime < 2250);                // Measure number of counts in 2.5 sec
@@ -317,15 +327,15 @@ void loop() {
 #endif
 #if UPPERSOIL
   logfile.print(",");
-  logfile.print(upperTemp);
+  logfile.print(upperSoil.temperature);
   logfile.print(",");
-  logfile.print(upperMois);
+  logfile.print(upperSoil.moisture);
 #endif
 #if LOWERSOIL
   logfile.print(",");
-  logfile.print(lowerTemp);
+  logfile.print(lowerSoil.temperature);
   logfile.print(",");
-  logfile.print(lowerMois);
+  logfile.print(lowerSoil.moisture);
 #endif
 #if PRESSURE
   logfile.print(",");
@@ -339,10 +349,14 @@ void loop() {
   logfile.print(",");
   logfile.print(wSpd);
 #endif
+#if SUNLIGHT
+  logfile.print(",");            
+  logfile.print(sunlight);
+#endif
 #if TEMPRH
-  logfile.print(", ");
+  logfile.print(",");
   logfile.print(shtAmb);
-  logfile.print(", ");
+  logfile.print(",");
   logfile.print(shtHum);
 #endif
   logfile.println();
@@ -370,25 +384,25 @@ void loop() {
 #endif
 #if UPPERSOIL
   SerialUSB.print(", ");
-  SerialUSB.print(upperTemp);
+  SerialUSB.print(upperSoil.temperature);
   SerialUSB.print(", ");
-  SerialUSB.print(upperMois);
+  SerialUSB.print(upperSoil.moisture);
 #endif
 #if LOWERSOIL
   SerialUSB.print(", ");
-  SerialUSB.print(lowerTemp);
+  SerialUSB.print(lowerSoil.temperature);
   SerialUSB.print(", ");
-  SerialUSB.print(lowerMois);
+  SerialUSB.print(lowerSoil.moisture);
 #endif
 #if PRESSURE
-  SerialUSB.print(",");
+  SerialUSB.print(", ");
   SerialUSB.print(pressure);
-  SerialUSB.print(",");
+  SerialUSB.print(", ");
   SerialUSB.print(bmpAmb);
 #endif
-  SerialUSB.print(",");
+  SerialUSB.print(", ");
   SerialUSB.print(wDir);
-  SerialUSB.print(",");
+  SerialUSB.print(", ");
   SerialUSB.print(wSpd);
 #if TEMPRH
   SerialUSB.print(", ");
@@ -433,55 +447,13 @@ void rtcISR(void) {
 
 
 // ISR for Davis Anemometer. Increments wind counter with every revolution
+#if WIND
 void windCounter() {
   windCount++;
 }
+#endif
 
 
-// Function to parse packet received from 5TM
-void parse5TM(char input[], double &mois, double &temp) {
-  int values[3] = {0, 0, 0};                                                    // Moisture, place holder, temperature
-  int fieldIndex = 0;                                                           // Values index count
-  int check = 0;                                                                // Stop byte position
-
-  // Parse input string, store into values
-  for (int j = 0; j < strlen(input); j++) {                                     
-    if (input[j] >= '0' && input[j] <= '9' && fieldIndex < 3) {
-      values[fieldIndex] = (values[fieldIndex] * 10) + (input[j] - '0');
-    }
-    else if (input[j] == ' ') {                                                 // If character is space, increment values place
-      fieldIndex++;
-    }
-    else {                                                                      // Otherwise store length of measurement string
-      check = j;
-      break;
-    }
-  }
-  values[1] = int(input[strlen(input) - 3]);                                    // Store sensor side checksum in place holder part of values, save space
-
-  // Calculate arduino side checksum...
-  char crc = 0;                                                                 
-  for (int j = 0; j < check; j++) {
-    crc += input[j];
-  }
-  crc = (crc + 0xD + 'x') % 64 + 32;
-
-  // Calculate moisture and temperature
-  mois = 0.0000043 * pow(double(values[0]) / 50.0, 3) - 0.00055 * pow(double(values[0]) / 50.0, 2) + 0.0292 * (double(values[0]) / 50.0) - 0.053; // Calculate moisture with topp equation
-  if (values[2] <= 900) {                       // Calculate temperature...
-    temp = (double(values[2]) - 400.0) / 10.0;
-  }
-  if (values[2] > 900) {
-    temp = 900.0 + 5.0 * (double(values[2]) - 900.0);
-    temp = (temp - 400.0) / 10.0;
-  }
-  if ( values[1] != crc) {
-    mois = 0.0;
-    temp = -273.15;
-  }
-
-  // No return. Reference to multiple variables passed in
-} // end parse5TM()
 
 
 
