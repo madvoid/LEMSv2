@@ -12,7 +12,7 @@
 //		Thanks to all the 3rd party libraries, especially to Adafruit for the excellent
 //		libraries and hardware. More specifics to be added as needed
 //    - Sleep code taken from https://github.com/rocketscream/Low-Power/blob/master/LowPower.cpp
-//      and from https://github.com/pubnub/samd21/blob/master/examples/Code/FirmwareUpgrade/ASF/sam0/drivers/system/system.h
+//      Thanks to @sandeepmistry at https://github.com/arduino/ArduinoCore-samd/issues/142 for further help
 //
 // Requirements:
 //		- LEMS Hardware
@@ -46,7 +46,7 @@
 
 
 // Other Defines ----------------------------------------------------------------------------------
-#define DEBUG 1
+#define DEBUG 0
 
 
 
@@ -153,15 +153,25 @@ void setup() {
 #if DEBUG
   while (!SerialUSB);
   SerialUSB.begin(9600);
-  delay(3000);
   SerialUSB.println("Starting Sketch");
 #endif
+  delay(3000);                                  // Allows to unplug before main code starts
 
   // Set pins
   pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(CARDSELECT, OUTPUT);
-  analogReadResolution(ADC_RES);
+  analogReadResolution(ADC_RES);                // Set resolution to 12 bit
+
+  // Turn on LED during setup process
+  digitalWrite(GREEN_LED_PIN, HIGH);
+
+  // Setup registers so interrupts wake board from sleep
+  SYSCTRL->VREG.bit.RUNSTDBY = 1;              // Configure regulator to run normally in standby mode, so not limited to 50uA
+  SYSCTRL->DFLLCTRL.bit.RUNSTDBY = 1;          // Enable DFLL48MHz clock in standby mode
+  //#if DEBUG
+  //  USBDevice.detach();                          // Disable USB device to avoid USB interrupts. Necessitates double press of reset button to upload though
+  //#endif                                         // Only needed when connected via native USB
 
   // RTC Setup
   if (!rtc.begin()) {
@@ -228,9 +238,7 @@ void setup() {
   logfile.println();
 
   // Delay and indicate start
-  delay(2000);
-  digitalWrite(GREEN_LED_PIN, HIGH);
-  delay(1500);
+  delay(3500);
   digitalWrite(GREEN_LED_PIN, LOW);
 
   // Wait for next time with evenly divisible deltaT, then set alarm
@@ -269,8 +277,11 @@ void loop() {
   // Wait for interrupt
 
   digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED off
-  while (!rtcFlag);
-  digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED on
+#if DEBUG
+  while (!rtcFlag);                    // Use while loop to avoid sleep states or debugging
+#else
+  standbySleep();                          // Use standbySleep() to reduce power consumption
+#endif
 
   // Gather Measurements
   DateTime now = rtc.now();
@@ -308,6 +319,7 @@ void loop() {
 
 
   // Log Data
+  digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED on
   logfile.print(now.year(), DEC);
   logfile.print(",");
   logfile.print(now.month(), DEC);
@@ -350,7 +362,7 @@ void loop() {
   logfile.print(wSpd);
 #endif
 #if SUNLIGHT
-  logfile.print(",");            
+  logfile.print(",");
   logfile.print(sunlight);
 #endif
 #if TEMPRH
@@ -454,6 +466,10 @@ void windCounter() {
 #endif
 
 
-
+// Function to put SAMD21 into standby sleep
+void standbySleep(void) {
+  SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+  __WFI();
+}
 
 
