@@ -1,0 +1,32 @@
+*** Possible parts to use for LEMSv2 ***
+- Moved from "Bill of Materials.xlsx"
+
+Custom Enclosure:
+- http://www.toollessplasticenclosures.com
+
+Good Headers: 
+- http://www.digikey.com/product-search/en/connectors-interconnects/rectangular-connectors-headers-receptacles-female-sockets/1442548?k=&pkeyword=&pv88=24&pv88=7&pv88=26&pv88=10&FV=fffc0023%2C1640001%2C1680001%2Cfff40016%2Cfff802f4&mnonly=0&newproducts=0&ColumnSort=88&page=1&stock=1&quantity=0&ptm=0&fid=0&pageSize=25
+- http://www.digikey.com/product-search/en/connectors-interconnects/rectangular-connectors-headers-receptacles-female-sockets/1442548?k=&pkeyword=&pv69=3&pv69=80&FV=fffc0023%2C1640001%2C1680002%2Cfff40016%2Cfff802f4%2C1600007&mnonly=0&newproducts=0&ColumnSort=88&page=1&stock=1&quantity=0&ptm=0&fid=0&pageSize=25
+
+Possible Mosfet:
+- http://www.mouser.com/ProductDetail/Fairchild-Semiconductor/2N7000_D26Z/?qs=VVLQfEDCVmOWAB6wZI7AfEGD75mPjRtd8jvfmfXcTKg%3d
+- http://www.mouser.com/ProductDetail/Fairchild-Semiconductor/BSS138/?qs=sGAEpiMZZMvlOED0T0kTWl5MKyjMqq%2fg
+- See for MOSFET that's ESD protected: http://electronics.stackexchange.com/questions/9915/are-discrete-mosfets-esd-sensitive
+
+Radiation Shield: 
+- http://www.ambientweather.com/amwesrpatean.html#caption
+- 3D print one
+
+5V Voltage Regulators:
+- http://www.ti.com/product/tps62163
+- http://www.ti.com/product/LMZ12001
+- http://www.ti.com/product/LMZ14201
+* http://www.mouser.com/ProductDetail/TRACO-Power/TSR-1-2450/?qs=ckJk83FOD0XFKqda0Mzkgw%3D%3D
+- Linear power modules
+
+LEDs:
+http://www.mouser.com/ProductDetail/Cree-Inc/SLV6A-FKB-CK1P1G1BB7R3R3/?qs=sGAEpiMZZMseGfSY3csMkX772gYb3OWxd9NdQZ6CZDt2kCLJqZK5gw%3d%3d
+
+Jumper Cables
+- http://www.digikey.com/product-search/en/cable-assemblies/flat-flex-ribbon-jumper-cables/1573391?k=&pkeyword=&pv316=2&FV=134004e%2C13400ac%2C134019b%2C13407ff%2C134098f%2C13409fe%2C1340fa6%2Cfff40018%2Cfff8020f%2C40800cf&mnonly=0&newproducts=0&ColumnSort=0&page=1&stock=1&quantity=0&ptm=0&fid=0&pageSize=25
+- http://www.digikey.com/product-search/en/cable-assemblies/flat-flex-cables-ffc-fpc/1573426?k=&pkeyword=&pv31=241&pv31=239&FV=7c00ef%2C7c00f1%2C7c00f3%2C134000c%2C1340700%2C1340736%2C1640001%2Cfff40018%2Cfff80232%2C1600006&mnonly=0&newproducts=0&ColumnSort=0&page=1&stock=1&quantity=0&ptm=0&fid=0&pageSize=25

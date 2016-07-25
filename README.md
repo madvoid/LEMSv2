@@ -2,6 +2,7 @@
 This is the repository for the second version of the LEMS Sensor Stations. Stay tuned, information will be added as it is generated. A majority of the documentation will be added to this file.
 
 ### General TODO
+1. Add battery voltage measurement to code and PCB
 5. Investigate MOSFET as reverse voltage protection
 1. Create time set code that's easily accessible
 2. Keep documentation and File List updated

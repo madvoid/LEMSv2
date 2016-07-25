@@ -53,10 +53,11 @@
 // Pin Defines ------------------------------------------------------------------------------------
 #define GREEN_LED_PIN 13     // Green LED pin - Change to D6 when LEDs are attached
 #define RED_LED_PIN 7       // Red LED pin
-#define CARDSELECT 5        // Sd card chip select pin
+#define CARDSELECT 5        // SD  card chip select pin
 #define RTC_ALARM_PIN 9     // DS3231 Alarm pin
 #define SUN_PIN A5          // Li200 solar radiation pin
 #define WDIR_PIN A4         // Davis wind direction pin
+#define BAT_PIN A3          // Battery resistor div. pin
 #define WSPD_PIN 8          // Davis wind speed pin
 #define USOIL_POW_PIN 2     // 5TM Power Pin, Upper
 #define LSOIL_POW_PIN 38    // 5TM Power Pin, Lower
