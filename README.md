@@ -20,7 +20,6 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 	* http://www.tinkerbee.com/pcb-assembly-service.html/
 	* http://www.seeedstudio.com/fusion_pcb.html 
 
-
 ### File List
 * Data Sheets/
 	* Data sheets for components
@@ -63,6 +62,10 @@ Only 3rd party software dependencies are included in this list. Libraries built 
 * [Adafruit MLX90614 Library](https://github.com/adafruit/Adafruit-MLX90614-Library)
 * In addition, the Sparkfun SAMD21 [board definition](https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json
 ) needs to be installed into the Arduino IDE. See [here](https://learn.sparkfun.com/tutorials/samd21-minidev-breakout-hookup-guide/setting-up-arduino) for more info.
+
+### Miscellaneous Notes
+- ADS1115 single ended resolution calculation information can be found [here](https://e2e.ti.com/support/data_converters/precision_data_converters/f/73/t/489070)
+- ADS1115 over range input information can be found [here](https://e2e.ti.com/support/data_converters/precision_data_converters/f/73/p/398187/1407689#1407689) and [here](https://e2e.ti.com/support/data_converters/precision_data_converters/f/73/t/378122)
 		
 ### Acknowledgements
 * Thanks to [Sparkfun](https://www.sparkfun.com) and [Adafruit](https://www.adafruit.com) for Arduino libraries, components, tutorials, and eagle parts. Many designs and eagle components are directly used from them

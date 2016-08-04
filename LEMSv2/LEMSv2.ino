@@ -46,7 +46,7 @@
 
 
 // Other Defines ----------------------------------------------------------------------------------
-#define DEBUG 0
+#define DEBUG 1
 
 
 
@@ -59,10 +59,10 @@
 #define WDIR_PIN A4         // Davis wind direction pin
 #define BAT_PIN A3          // Battery resistor div. pin
 #define WSPD_PIN 8          // Davis wind speed pin
-#define USOIL_POW_PIN 2     // 5TM Power Pin, Upper
-#define LSOIL_POW_PIN 38    // 5TM Power Pin, Lower
-#define USOIL_SER Serial1   // 5TM Serial Port, Upper. RX = D0, TX = D1
-#define LSOIL_SER Serial    // 5TM Serial Port, Lower. RX = D31, TX = D30
+#define USOIL_POW_PIN 2     // 5TM Power Pin, Upper - White 5TM Wire
+#define LSOIL_POW_PIN 38    // 5TM Power Pin, Lower - White 5TM Wire
+#define USOIL_SER Serial1   // 5TM Serial Port, Upper RX = D0, TX = D1 - Red 5TM Wire
+#define LSOIL_SER Serial    // 5TM Serial Port, Lower RX = D31, TX = D30 - Red 5TM Wire
 #define ADC_RES 12          // Number of bits ADC has
 
 
@@ -98,8 +98,8 @@ char filename[] = "LEMXX_00.CSV";   // Initial filename
 
 // MLX90614
 #if IR
-float mlxIR;                                   // IR values from MLX90614
-float mlxAmb;                                  // Ambient temp values from MLX90614
+double mlxIR;                                   // IR values from MLX90614
+double mlxAmb;                                  // Ambient temp values from MLX90614
 Adafruit_MLX90614 mlx = Adafruit_MLX90614();   // MLX90614 class
 #endif
 
@@ -116,30 +116,30 @@ d5TM lowerSoil(LSOIL_SER, 1200);
 // BMP280
 #if PRESSURE
 Adafruit_BMP280 bmp;        // Initialize BMP280 class
-float pressure;             // Barometric pressure
-float bmpAmb;               // Temperature from BMP280
+double pressure;             // Barometric pressure
+double bmpAmb;               // Temperature from BMP280
 #endif
 
 // Wind
 #if WIND
 unsigned long startTime;            // Used to measure averaging period for wind speed
 volatile unsigned long windCount;   // Counts to convert to speed
-float wDir;                         // Wind direction
-float wSpd;                         // Wind speed
+double wDir;                         // Wind direction
+double wSpd;                         // Wind speed
 #endif
 
 #if SUNLIGHT
 unsigned int rawSun = 0;                // Word to hold 12 bit sunlight values
-const float liConst = 93.40E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
-const float ampResistor = 44300;        // Exact Resistor Value used by Op-Amp
-float sunlight = 0.0;                   // Converted Value
+const double liConst = 92.54E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
+const double ampResistor = 31000;        // Exact Resistor Value used by Op-Amp
+double sunlight = 0.0;                   // Converted Value
 #endif
 
 // SHT21
 #if TEMPRH
 Adafruit_SHT31 sht = Adafruit_SHT31();
-float shtAmb;               // Ambient temp values from SHT21
-float shtHum;               // Relative humidity values from SHT21
+double shtAmb;               // Ambient temp values from SHT21
+double shtHum;               // Relative humidity values from SHT21
 #endif
 
 
@@ -230,6 +230,8 @@ void setup() {
   pinMode(WSPD_PIN, INPUT_PULLUP);
 #endif
 #if SUNLIGHT
+  pinMode(SUN_PIN, INPUT);      // Make sure ADC pin in correct state
+  digitalWrite(SUN_PIN, LOW);
   logfile.print(",Sunlight");
 #endif
 #if TEMPRH
@@ -279,7 +281,7 @@ void loop() {
 
   digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED off
 #if DEBUG
-  while (!rtcFlag);                    // Use while loop to avoid sleep states or debugging
+  while (!rtcFlag);                        // Use while loop to avoid sleep states or debugging
 #else
   standbySleep();                          // Use standbySleep() to reduce power consumption
 #endif
@@ -302,20 +304,20 @@ void loop() {
 #endif
 #if SUNLIGHT
   rawSun = analogRead(SUN_PIN);
-  sunlight = rawSun * (3.3 / pow(2, ADC_RES)) * (1 / ampResistor) * (1 / liConst); // Convert to W/m^2
+  sunlight = double(rawSun) * (3.3 / double(pow(2, ADC_RES))) * (1.0 / ampResistor) * (1.0 / liConst); // Convert to W/m^2
 #endif
 #if TEMPRH
   shtAmb = sht.readTemperature();
   shtHum = sht.readHumidity();
 #endif
 #if WIND
-  wDir = (float)analogRead(WDIR_PIN) * 360.0 / pow(2, ADC_RES);  // Map from analog count to 0-360, with 360=North
+  wDir = (double)analogRead(WDIR_PIN) * 360.0 / pow(2, ADC_RES);  // Map from analog count to 0-360, with 360=North
   startTime = millis();
-  attachInterrupt(WSPD_PIN, windCounter, RISING);     // Attach interrupt for wind speed pin
-  while (millis() - startTime < 2250);                // Measure number of counts in 2.5 sec
+  attachInterrupt(WSPD_PIN, windCounter, RISING);                 // Attach interrupt for wind speed pin
+  while (millis() - startTime < 2250);                            // Measure number of counts in 2.5 sec
   detachInterrupt(WSPD_PIN);
-  wSpd = windCount;                                   // mph = (counts)*(2.25)/(sample period in seconds). If period is 2.25 seconds, mph = counts
-  wSpd = 0.447 * wSpd;                                // Convert to m/s
+  wSpd = windCount;                                               // mph = (counts)*(2.25)/(sample period in seconds). If period is 2.25 seconds, mph = counts
+  wSpd = 0.447 * wSpd;                                            // Convert to m/s
 #endif
 
 
