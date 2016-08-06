@@ -4705,6 +4705,17 @@ Matches 4UCONN part # 11026&lt;br&gt;
 <text x="1.7" y="0.7" size="1.016" layer="25">&gt;NAME</text>
 <text x="1.7" y="-0.4" size="0.6096" layer="27">&gt;VALUE</text>
 </package>
+<package name="LED-0603">
+<smd name="C" x="-0.877" y="0" dx="1" dy="1" layer="1" roundness="30" rot="R90"/>
+<smd name="A" x="0.877" y="0" dx="1" dy="1" layer="1" roundness="30" rot="R90"/>
+<text x="0.889" y="-1.7185" size="0.4064" layer="25" rot="R180">&gt;NAME</text>
+<text x="1.016" y="1.0795" size="0.4064" layer="27" rot="R180">&gt;VALUE</text>
+<wire x1="-0.25" y1="-0.625" x2="-0.25" y2="-1.125" width="0.127" layer="21"/>
+<wire x1="-0.25" y1="-1.125" x2="-0.25" y2="-1.5" width="0.127" layer="21"/>
+<wire x1="0.25" y1="-0.625" x2="-0.25" y2="-1.125" width="0.127" layer="21"/>
+<wire x1="-0.25" y1="-1.125" x2="0.25" y2="-1.5" width="0.127" layer="21"/>
+<wire x1="0.25" y1="-1.5" x2="0.25" y2="-0.625" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="DGND">
@@ -5052,6 +5063,48 @@ Matches 4UCONN part # 11026&lt;br&gt;
 <pin name="VDD" x="-15.24" y="7.62" length="middle" direction="pwr"/>
 <text x="-10.16" y="-12.7" size="1.27" layer="95">&gt;NAME</text>
 <text x="-10.16" y="12.7" size="1.27" layer="96">&gt;VALUE</text>
+</symbol>
+<symbol name="NPN">
+<wire x1="2.54" y1="2.54" x2="0.508" y2="1.524" width="0.1524" layer="94"/>
+<wire x1="1.778" y1="-1.524" x2="2.54" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="-2.54" x2="1.27" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="1.27" y1="-2.54" x2="1.778" y2="-1.524" width="0.1524" layer="94"/>
+<wire x1="1.54" y1="-2.04" x2="0.308" y2="-1.424" width="0.1524" layer="94"/>
+<wire x1="1.524" y1="-2.413" x2="2.286" y2="-2.413" width="0.254" layer="94"/>
+<wire x1="2.286" y1="-2.413" x2="1.778" y2="-1.778" width="0.254" layer="94"/>
+<wire x1="1.778" y1="-1.778" x2="1.524" y2="-2.286" width="0.254" layer="94"/>
+<wire x1="1.524" y1="-2.286" x2="1.905" y2="-2.286" width="0.254" layer="94"/>
+<wire x1="1.905" y1="-2.286" x2="1.778" y2="-2.032" width="0.254" layer="94"/>
+<text x="5.08" y="0" size="1.778" layer="95">&gt;NAME</text>
+<text x="5.08" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
+<rectangle x1="-0.254" y1="-2.54" x2="0.508" y2="2.54" layer="94"/>
+<pin name="B" x="-2.54" y="0" visible="off" length="short" direction="pas" swaplevel="1"/>
+<pin name="E" x="2.54" y="-5.08" visible="off" length="short" direction="pas" swaplevel="3" rot="R90"/>
+<pin name="C" x="2.54" y="5.08" visible="off" length="short" direction="pas" swaplevel="2" rot="R270"/>
+</symbol>
+<symbol name="LED">
+<wire x1="1.27" y1="0" x2="0" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="-1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="1.27" y1="-2.54" x2="0" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="-1.27" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="-1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="-2.032" y1="-0.762" x2="-3.429" y2="-2.159" width="0.1524" layer="94"/>
+<wire x1="-1.905" y1="-1.905" x2="-3.302" y2="-3.302" width="0.1524" layer="94"/>
+<text x="3.556" y="-4.572" size="1.778" layer="95" rot="R90">&gt;NAME</text>
+<text x="5.715" y="-4.572" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
+<pin name="C" x="0" y="-5.08" visible="off" length="short" direction="pas" rot="R90"/>
+<pin name="A" x="0" y="2.54" visible="off" length="short" direction="pas" rot="R270"/>
+<polygon width="0.1524" layer="94">
+<vertex x="-3.429" y="-2.159"/>
+<vertex x="-3.048" y="-1.27"/>
+<vertex x="-2.54" y="-1.778"/>
+</polygon>
+<polygon width="0.1524" layer="94">
+<vertex x="-3.302" y="-3.302"/>
+<vertex x="-2.921" y="-2.413"/>
+<vertex x="-2.413" y="-2.921"/>
+</polygon>
 </symbol>
 </symbols>
 <devicesets>
@@ -7464,6 +7517,57 @@ Standard 3-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <connect gate="G$1" pin="SDO" pad="5"/>
 <connect gate="G$1" pin="VDD" pad="8"/>
 <connect gate="G$1" pin="VDDIO" pad="6"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MMBT3904" prefix="Q">
+<gates>
+<gate name="G$1" symbol="NPN" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SOT23-3">
+<connects>
+<connect gate="G$1" pin="B" pad="1"/>
+<connect gate="G$1" pin="C" pad="3"/>
+<connect gate="G$1" pin="E" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="LED_GREEN" prefix="D" uservalue="yes">
+<description>Green 0603 LED - Lite-On LTST-C190GKT - https://octopart.com/ltst-c190gkt-lite-on-549821</description>
+<gates>
+<gate name="G$1" symbol="LED" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="LED-0603">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="LED_RED" prefix="D" uservalue="yes">
+<description>Green 0603 LED - Lite-On LTST-C190KRKT - https://octopart.com/ltst-c190krkt-lite-on-549893</description>
+<gates>
+<gate name="G$1" symbol="LED" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="LED-0603">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -10326,6 +10430,18 @@ type 0309, grid 2.5 mm</description>
 <part name="C5" library="LEMSv2" deviceset="CAP" device="0805"/>
 <part name="C6" library="LEMSv2" deviceset="CAP" device="0805"/>
 <part name="GND7" library="LEMSv2" deviceset="GND" device=""/>
+<part name="Q8" library="LEMSv2" deviceset="MMBT3904" device=""/>
+<part name="Q9" library="LEMSv2" deviceset="MMBT3904" device=""/>
+<part name="GND8" library="LEMSv2" deviceset="GND" device=""/>
+<part name="GND9" library="LEMSv2" deviceset="GND" device=""/>
+<part name="R15" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="130"/>
+<part name="R16" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="130"/>
+<part name="R17" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="1k"/>
+<part name="R18" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="1k"/>
+<part name="D1" library="LEMSv2" deviceset="LED_GREEN" device="" value="GREEN"/>
+<part name="D2" library="LEMSv2" deviceset="LED_RED" device="" value="RED"/>
+<part name="SUPPLY11" library="LEMSv2" deviceset="3.3V" device=""/>
+<part name="SUPPLY12" library="LEMSv2" deviceset="3.3V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -10421,6 +10537,18 @@ type 0309, grid 2.5 mm</description>
 <instance part="C5" gate="G$1" x="7.62" y="162.56"/>
 <instance part="C6" gate="G$1" x="12.7" y="152.4"/>
 <instance part="GND7" gate="1" x="10.16" y="144.78"/>
+<instance part="Q8" gate="G$1" x="17.78" y="114.3"/>
+<instance part="Q9" gate="G$1" x="53.34" y="114.3"/>
+<instance part="GND8" gate="1" x="20.32" y="106.68"/>
+<instance part="GND9" gate="1" x="55.88" y="106.68"/>
+<instance part="R15" gate="G$1" x="20.32" y="132.08" rot="R90"/>
+<instance part="R16" gate="G$1" x="55.88" y="132.08" rot="R90"/>
+<instance part="R17" gate="G$1" x="10.16" y="114.3"/>
+<instance part="R18" gate="G$1" x="45.72" y="114.3"/>
+<instance part="D1" gate="G$1" x="20.32" y="124.46"/>
+<instance part="D2" gate="G$1" x="55.88" y="124.46"/>
+<instance part="SUPPLY11" gate="G$1" x="20.32" y="137.16"/>
+<instance part="SUPPLY12" gate="G$1" x="55.88" y="137.16"/>
 </instances>
 <busses>
 </busses>
@@ -10533,6 +10661,14 @@ type 0309, grid 2.5 mm</description>
 <pinref part="U4" gate="G$1" pin="CSB"/>
 <wire x1="53.34" y1="162.56" x2="58.42" y2="162.56" width="0.1524" layer="91"/>
 <label x="53.34" y="162.56" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="R15" gate="G$1" pin="2"/>
+<pinref part="SUPPLY11" gate="G$1" pin="3.3V"/>
+</segment>
+<segment>
+<pinref part="R16" gate="G$1" pin="2"/>
+<pinref part="SUPPLY12" gate="G$1" pin="3.3V"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -10679,6 +10815,14 @@ type 0309, grid 2.5 mm</description>
 <wire x1="12.7" y1="149.86" x2="12.7" y2="147.32" width="0.1524" layer="91"/>
 <wire x1="12.7" y1="147.32" x2="10.16" y2="147.32" width="0.1524" layer="91"/>
 <junction x="10.16" y="147.32"/>
+</segment>
+<segment>
+<pinref part="Q8" gate="G$1" pin="E"/>
+<pinref part="GND8" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="Q9" gate="G$1" pin="E"/>
+<pinref part="GND9" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="SCK" class="0">
@@ -11166,6 +11310,11 @@ type 0309, grid 2.5 mm</description>
 <wire x1="187.96" y1="71.12" x2="193.04" y2="71.12" width="0.1524" layer="91"/>
 <label x="190.5" y="71.12" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="R18" gate="G$1" pin="1"/>
+<wire x1="40.64" y1="114.3" x2="38.1" y2="114.3" width="0.1524" layer="91"/>
+<label x="38.1" y="114.3" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="D6" class="0">
 <segment>
@@ -11177,6 +11326,11 @@ type 0309, grid 2.5 mm</description>
 <pinref part="J10" gate="G$1" pin="7"/>
 <wire x1="187.96" y1="68.58" x2="193.04" y2="68.58" width="0.1524" layer="91"/>
 <label x="190.5" y="68.58" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="R17" gate="G$1" pin="1"/>
+<wire x1="5.08" y1="114.3" x2="2.54" y2="114.3" width="0.1524" layer="91"/>
+<label x="2.54" y="114.3" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="D4" class="0">
@@ -11409,6 +11563,42 @@ type 0309, grid 2.5 mm</description>
 <wire x1="76.2" y1="17.78" x2="68.58" y2="17.78" width="0.1524" layer="91"/>
 <junction x="76.2" y="17.78"/>
 <label x="68.58" y="15.24" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$5" class="0">
+<segment>
+<pinref part="Q8" gate="G$1" pin="B"/>
+<pinref part="R17" gate="G$1" pin="2"/>
+</segment>
+</net>
+<net name="N$6" class="0">
+<segment>
+<pinref part="Q9" gate="G$1" pin="B"/>
+<pinref part="R18" gate="G$1" pin="2"/>
+</segment>
+</net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="Q8" gate="G$1" pin="C"/>
+<pinref part="D1" gate="G$1" pin="C"/>
+</segment>
+</net>
+<net name="N$8" class="0">
+<segment>
+<pinref part="Q9" gate="G$1" pin="C"/>
+<pinref part="D2" gate="G$1" pin="C"/>
+</segment>
+</net>
+<net name="N$9" class="0">
+<segment>
+<pinref part="D1" gate="G$1" pin="A"/>
+<pinref part="R15" gate="G$1" pin="1"/>
+</segment>
+</net>
+<net name="N$10" class="0">
+<segment>
+<pinref part="D2" gate="G$1" pin="A"/>
+<pinref part="R16" gate="G$1" pin="1"/>
 </segment>
 </net>
 </nets>

@@ -25,10 +25,8 @@
 //
 // Todo:
 //		- All sensors
-//    - Make ADC generalizable. Replace all 4096
-//		- Low Power Modes - Implement standby mode?
-//    - LEDs - Add LEDs, change pins
-//    - Line 196, print everything no more dynamic header?
+//    - Line 196, print everything no more dynamic header? <-- Why did I put this?
+//    - Change error red light to blinking red light to save power
 //
 // ------------------------------------------------------------------------------------------------
 
@@ -51,7 +49,7 @@
 
 
 // Pin Defines ------------------------------------------------------------------------------------
-#define GREEN_LED_PIN 13     // Green LED pin - Change to D6 when LEDs are attached
+#define GREEN_LED_PIN 6     // Green LED pin
 #define RED_LED_PIN 7       // Red LED pin
 #define CARDSELECT 5        // SD  card chip select pin
 #define RTC_ALARM_PIN 9     // DS3231 Alarm pin
