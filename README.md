@@ -3,17 +3,14 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 
 ### General TODO
 1. Add battery voltage measurement to code and PCB
-5. Investigate MOSFET as reverse voltage protection
 1. Create time set code that's easily accessible
 2. Keep documentation and File List updated
 4. Try SDI-12 code
-8. Update everything for current setup
 
 ### PCB TODO
-2. Add 5V regulator
-4. Put anti-static hardware?
-5. Put reverse voltage hardware
-5. Consider assembly. Possible sources:
+See `Bill of Materials.xlsx` for more todo
+
+1. Consider assembly. Possible sources:
 	* https://www.screamingcircuits.com
 	* http://www.nexpcb.com
 	* http://www.4pcb.com
@@ -51,6 +48,8 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 		* `Test_5TM.ino` - Test code for 5TM Library. 5TM has been working since LEMSv1 but is now made into a library.
 		* `d5TM.h` - Header file for corresponding `.cpp` file
 		* `d5TM.cpp` - Library used to interact with 5TM. Developed here then copied to main code folder
+	* Li200_Test/
+		* `Li200_Test.ino` - Test Li200 with intermediate values in calculations printed
 		
 ### Dependencies
 Only 3rd party software dependencies are included in this list. Libraries built into the Arduino software or created for the LEMSv2 software isn't included.
