@@ -330,34 +330,27 @@ Standard 8.5x11 US Letter frame</description>
 </polygon>
 </package>
 <package name="06132">
-<wire x1="-13.2" y1="-25.1" x2="-13.2" y2="0" width="0.127" layer="21"/>
-<wire x1="-13.2" y1="0" x2="10.6" y2="0" width="0.127" layer="21"/>
-<wire x1="10.6" y1="0" x2="10.6" y2="-2.5" width="0.127" layer="21"/>
-<wire x1="10.6" y1="-2.5" x2="13.2" y2="-2.5" width="0.127" layer="21"/>
-<wire x1="13.2" y1="-2.5" x2="13.3" y2="-25.1" width="0.127" layer="21"/>
-<wire x1="13.3" y1="-25.1" x2="12.2" y2="-25.1" width="0.127" layer="21"/>
-<wire x1="12.2" y1="-25.1" x2="-12.3" y2="-25.1" width="0.127" layer="21"/>
-<wire x1="-12.3" y1="-25.1" x2="-13.2" y2="-25.1" width="0.127" layer="21"/>
-<wire x1="-12.4" y1="-24.8" x2="12" y2="-25" width="0.127" layer="21" curve="-27.095878"/>
-<wire x1="-12.4" y1="-24.8" x2="-12.3" y2="-25.1" width="0.127" layer="21"/>
-<wire x1="12" y1="-25" x2="12.2" y2="-25.1" width="0.127" layer="21"/>
-<smd name="GP" x="-13.8" y="-21.8" dx="2.8" dy="2" layer="1" rot="R90"/>
-<smd name="GP2" x="14.1" y="-21.8" dx="2.8" dy="2" layer="1" rot="R90"/>
-<smd name="GP4" x="-13.9" y="-1" dx="2.8" dy="2" layer="1" rot="R90"/>
-<smd name="WP" x="-12.2" y="0.9" dx="4" dy="0.7" layer="1" rot="R90"/>
-<smd name="8" x="-9.7" y="0.9" dx="4" dy="0.7" layer="1" rot="R90"/>
-<smd name="7" x="-8.1" y="0.9" dx="4" dy="1.2" layer="1" rot="R90"/>
-<smd name="6" x="-5.6" y="0.9" dx="4" dy="1.2" layer="1" rot="R90"/>
-<smd name="5" x="-3.1" y="0.9" dx="4" dy="1.2" layer="1" rot="R90"/>
-<smd name="2" x="4.4" y="0.9" dx="4" dy="1.2" layer="1" rot="R90"/>
-<smd name="4" x="-0.6" y="0.9" dx="4" dy="1.2" layer="1" rot="R90"/>
-<smd name="1" x="6.9" y="0.9" dx="4" dy="1.2" layer="1" rot="R90"/>
-<smd name="3" x="1.9" y="0.9" dx="4" dy="1.2" layer="1" rot="R90"/>
-<smd name="9" x="9.4" y="0.9" dx="4" dy="1.2" layer="1" rot="R90"/>
-<smd name="CD" x="-11" y="0.9" dx="4" dy="0.7" layer="1" rot="R90"/>
-<smd name="GP3" x="11.7" y="-0.9" dx="2.8" dy="2" layer="1" rot="R90"/>
-<hole x="-11.6" y="-2.1" drill="1.1"/>
-<hole x="9.5" y="-2.1" drill="1.6"/>
+<smd name="GP" x="-13.65" y="-11.325" dx="2.8" dy="1.5" layer="1" rot="R90"/>
+<smd name="GP2" x="13.65" y="-11.325" dx="2.8" dy="1.5" layer="1" rot="R90"/>
+<smd name="GP4" x="-13.65" y="10.175" dx="2.8" dy="1.5" layer="1" rot="R90"/>
+<smd name="WP" x="-12.25" y="12.175" dx="1.9" dy="0.7" layer="1" rot="R90"/>
+<smd name="8" x="-9.75" y="12.175" dx="1.9" dy="1" layer="1" rot="R90"/>
+<smd name="7" x="-8.05" y="12.175" dx="1.9" dy="1" layer="1" rot="R90"/>
+<smd name="6" x="-5.625" y="12.175" dx="1.9" dy="1" layer="1" rot="R90"/>
+<smd name="5" x="-3.125" y="12.175" dx="1.9" dy="1" layer="1" rot="R90"/>
+<smd name="2" x="4.375" y="12.175" dx="1.9" dy="1" layer="1" rot="R90"/>
+<smd name="4" x="-0.625" y="12.175" dx="1.9" dy="1" layer="1" rot="R90"/>
+<smd name="1" x="6.875" y="12.175" dx="1.9" dy="1" layer="1" rot="R90"/>
+<smd name="3" x="1.875" y="12.175" dx="1.9" dy="1" layer="1" rot="R90"/>
+<smd name="9" x="9.375" y="12.175" dx="1.9" dy="1" layer="1" rot="R90"/>
+<smd name="CD" x="-11.05" y="12.175" dx="1.9" dy="0.7" layer="1" rot="R90"/>
+<smd name="GP3" x="11.45" y="10.175" dx="2.8" dy="1.5" layer="1" rot="R90"/>
+<hole x="-11.5" y="9.175" drill="1.1"/>
+<hole x="9.5" y="9.175" drill="1.6"/>
+<wire x1="-13.95" y1="-13.125" x2="13.95" y2="-13.125" width="0.127" layer="21"/>
+<wire x1="-13.95" y1="13.125" x2="13.95" y2="13.125" width="0.127" layer="21"/>
+<wire x1="-13.95" y1="-13.125" x2="-13.95" y2="13.125" width="0.127" layer="21"/>
+<wire x1="13.95" y1="-13.125" x2="13.95" y2="13.125" width="0.127" layer="21"/>
 </package>
 <package name="BATTERY-AAA">
 <wire x1="-13.97" y1="3.81" x2="-13.97" y2="-3.81" width="0.127" layer="51"/>
@@ -5732,7 +5725,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 </device>
 </devices>
 </deviceset>
-<deviceset name="SDMMC">
+<deviceset name="SDMMC" uservalue="yes">
 <description>&lt;b&gt;SD MMC Card holder&lt;/b&gt;
 &lt;p&gt;
 4UCON part #06132 - easy to solder</description>
