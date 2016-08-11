@@ -67,14 +67,14 @@
 
 
 // Class Functions --------------------------------------------------------------------------------
-d5TM::d5TM(HardwareSerial &port, int bdRate): serPort(port) {
+d5TM::d5TM(HardwareSerial &port, int bdRate, int powPin): serPort(port) {
   baudRate = bdRate;
+  powerPin = powPin;
 }
 
 
 
-void d5TM::begin(int powPin) {
-  powerPin = powPin;
+void d5TM::begin(void) {
   pinMode(powerPin, OUTPUT);
   digitalWrite(powerPin, LOW);
   serPort.begin(baudRate);
@@ -97,7 +97,7 @@ int d5TM::getMeasurements(void) {
   char input[serPort.available()];    // Array to store sensor output
   while (serPort.available() > 0) {
     input[i] = serPort.read();
-    i++;                              
+    i++;
   }
   // After this point, i is used as the length of the string sent
 
@@ -124,7 +124,7 @@ int d5TM::getMeasurements(void) {
   }
 
   // Calculate checksum
-  values[1] = int(input[i - 3]);        // Store sensor side checksum
+  values[1] = int(input[i - 4]);                    // Store sensor side checksum. 'i' is a count, so subtract 1 to make it 0 indexed, and three to get to the checksum
   char crc = 0;                                     // Calculate arduino side checksum...
   for (int j = 0; j < check; j++) {
     crc += input[j];
@@ -149,7 +149,6 @@ int d5TM::getMeasurements(void) {
     moisture = -1.0;
     temperature = -273.15;
   }
-
   return 0;
 }
 

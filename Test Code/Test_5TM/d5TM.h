@@ -41,8 +41,8 @@ class d5TM {
     int powerPin;
     HardwareSerial &serPort;
   public:
-    d5TM(HardwareSerial &port, int bdRate);
-    void begin(int powPin);
+    d5TM(HardwareSerial &port, int bdRate, int powPin);
+    void begin(void);
     int getMeasurements(void);
     double moisture, temperature;
   protected:

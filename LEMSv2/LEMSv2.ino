@@ -24,8 +24,7 @@
 //      possibilities for code divergence. Be aware.
 //
 // Todo:
-//		- All sensors
-//    - Line 196, print everything no more dynamic header? <-- Why did I put this?
+//		- Change 3.3V to actual VCC reading from ADC
 //    - Change error red light to blinking red light to save power
 //
 // ------------------------------------------------------------------------------------------------
@@ -59,8 +58,8 @@
 #define WSPD_PIN 8          // Davis wind speed pin
 #define USOIL_POW_PIN 2     // 5TM Power Pin, Upper - White 5TM Wire
 #define LSOIL_POW_PIN 38    // 5TM Power Pin, Lower - White 5TM Wire
-#define USOIL_SER Serial1   // 5TM Serial Port, Upper RX = D0, TX = D1 - Red 5TM Wire
-#define LSOIL_SER Serial    // 5TM Serial Port, Lower RX = D31, TX = D30 - Red 5TM Wire
+#define USOIL_SER Serial1   // 5TM Serial Port, Upper RX = D0, TX = D1; Red 5TM Wire
+#define LSOIL_SER Serial    // 5TM Serial Port, Lower RX = D31, TX = D30; Red 5TM Wire
 #define ADC_RES 12          // Number of bits ADC has
 
 
@@ -103,12 +102,12 @@ Adafruit_MLX90614 mlx = Adafruit_MLX90614();   // MLX90614 class
 
 // Upper soil
 #if UPPERSOIL
-d5TM upperSoil(USOIL_SER, 1200);
+d5TM upperSoil(USOIL_SER, 1200, USOIL_POW_PIN);
 #endif
 
 // Lower soil
 #if LOWERSOIL
-d5TM lowerSoil(LSOIL_SER, 1200);
+d5TM lowerSoil(LSOIL_SER, 1200, LSOIL_POW_PIN);
 #endif
 
 // BMP280
@@ -212,11 +211,11 @@ void setup() {
   logfile.print(",MLX_IR_C,MLX_Amb_C");
 #endif
 #if UPPERSOIL
-  upperSoil.begin(USOIL_POW_PIN);
+  upperSoil.begin();
   logfile.print(",Upper_Soil_Temp,Upper_Soil_Mois");
 #endif
 #if LOWERSOIL
-  lowerSoil.begin(LSOIL_POW_PIN);
+  lowerSoil.begin();
   logfile.print(",Lower_Soil_Temp,Lower_Soil_Mois");
 #endif
 #if PRESSURE
@@ -413,10 +412,16 @@ void loop() {
   SerialUSB.print(", ");
   SerialUSB.print(bmpAmb);
 #endif
+#if WIND
   SerialUSB.print(", ");
   SerialUSB.print(wDir);
   SerialUSB.print(", ");
   SerialUSB.print(wSpd);
+#endif
+#if SUNLIGHT
+SerialUSB.print(", ");
+SerialUSB.print(sunlight);
+#endif
 #if TEMPRH
   SerialUSB.print(", ");
   SerialUSB.print(shtAmb);
