@@ -97,7 +97,7 @@ int d5TM::getMeasurements(void) {
   char input[serPort.available()];    // Array to store sensor output
   while (serPort.available() > 0) {
     input[i] = serPort.read();
-    i++;                              
+    i++;
   }
   // After this point, i is used as the length of the string sent
 
@@ -123,8 +123,17 @@ int d5TM::getMeasurements(void) {
     }
   }
 
-  // Calculate checksum
-  values[1] = int(input[i - 4]);                    // Store sensor side checksum. 'i' is a count, so subtract 1 to make it 0 indexed, and three to get to the checksum
+  // Find Checksum
+  int D = 0;
+  for(int j = i; j >=0; j--){
+    if(input[j] == 0x0D){                           // Find last 0x0D. Checksum comes one before it
+      D = j;
+      break;
+    }
+  }
+  values[1] = int(input[D - 1]);                    // Store Checksum
+  
+  // Calculate Checksum
   char crc = 0;                                     // Calculate arduino side checksum...
   for (int j = 0; j < check; j++) {
     crc += input[j];

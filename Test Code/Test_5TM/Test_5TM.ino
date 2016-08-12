@@ -25,7 +25,7 @@ void loop() {
   soil.getMeasurements();
   soil1.getMeasurements();
   digitalWrite(13, LOW);
-  SerialUSB.print("Serial2 :: ");
+  SerialUSB.print("Serial :: ");
   SerialUSB.print("Temperature: ");
   SerialUSB.print(soil.temperature);
   SerialUSB.print(" :|: Moisture: ");
@@ -48,6 +48,6 @@ void loop() {
   //  Serial.println(soil1.moisture);
   //  Serial.println();
 
-  delay(5000);
+  delay(10000);
 }
 
