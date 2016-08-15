@@ -60,6 +60,7 @@
 #define LSOIL_POW_PIN 38    // 5TM Power Pin, Lower - White 5TM Wire
 #define USOIL_SER Serial1   // 5TM Serial Port, Upper RX = D0, TX = D1; Red 5TM Wire
 #define LSOIL_SER Serial    // 5TM Serial Port, Lower RX = D31, TX = D30; Red 5TM Wire
+#define FAN_PIN 11          // Pin for cooling fan
 #define ADC_RES 12          // Number of bits ADC has
 
 
@@ -160,6 +161,10 @@ void setup() {
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(CARDSELECT, OUTPUT);
   analogReadResolution(ADC_RES);                // Set resolution to 12 bit
+
+  // Set fan low in case it's plugged in but not wanting to be used
+  pinMode(FAN_PIN, OUTPUT);
+  digitalWrite(FAN_PIN, LOW);
 
   // Turn on LED during setup process
   digitalWrite(GREEN_LED_PIN, HIGH);

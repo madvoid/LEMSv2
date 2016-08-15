@@ -12184,7 +12184,6 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="U$1" library="LEMSv2" deviceset="MOUNTINGHOLE" device="2.5"/>
 <part name="U$2" library="LEMSv2" deviceset="MOUNTINGHOLE" device="2.5"/>
 <part name="U$3" library="LEMSv2" deviceset="MOUNTINGHOLE" device="2.5"/>
-<part name="U$4" library="LEMSv2" deviceset="MOUNTINGHOLE" device="2.5"/>
 <part name="C3" library="LEMSv2" deviceset="CAP" device="" value="0.1uF"/>
 <part name="U3" library="LEMSv2" deviceset="TLV2372" device=""/>
 <part name="SUPPLY10" library="LEMSv2" deviceset="5V" device=""/>
@@ -12203,8 +12202,8 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="GND9" library="LEMSv2" deviceset="GND" device=""/>
 <part name="R15" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="130"/>
 <part name="R16" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="130"/>
-<part name="R17" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="1k"/>
-<part name="R18" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="1k"/>
+<part name="R17" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="4.3k"/>
+<part name="R18" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="4.3k"/>
 <part name="LED1" library="LEMSv2" deviceset="LED_GREEN" device="" value="GREEN"/>
 <part name="LED2" library="LEMSv2" deviceset="LED_RED" device="" value="RED"/>
 <part name="SUPPLY11" library="LEMSv2" deviceset="3.3V" device=""/>
@@ -12245,13 +12244,18 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="J7" library="LEMSv2" deviceset="M02" device="3.5MM"/>
 <part name="Q4" library="LEMSv2" deviceset="MMBT3904" device=""/>
 <part name="Q6" library="LEMSv2" deviceset="MMBT3904" device=""/>
-<part name="R6" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="1k"/>
-<part name="R8" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="1k"/>
+<part name="R6" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="4.3k"/>
+<part name="R8" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="4.3k"/>
 <part name="SUPPLY17" library="LEMSv2" deviceset="5V" device=""/>
 <part name="SUPPLY18" library="LEMSv2" deviceset="5V" device=""/>
 <part name="GND13" library="LEMSv2" deviceset="GND" device=""/>
 <part name="GND14" library="LEMSv2" deviceset="GND" device=""/>
 <part name="DS1" library="LEMSv2" deviceset="DIODE_SCHOTTKY" device=""/>
+<part name="DS2" library="LEMSv2" deviceset="DIODE_SCHOTTKY" device=""/>
+<part name="Q3" library="LEMSv2" deviceset="MMBT3904" device=""/>
+<part name="R10" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="4.3k"/>
+<part name="GND15" library="LEMSv2" deviceset="GND" device=""/>
+<part name="SUPPLY19" library="LEMSv2" deviceset="5V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -12313,7 +12317,6 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="U$1" gate="G$1" x="165.1" y="43.18"/>
 <instance part="U$2" gate="G$1" x="172.72" y="43.18"/>
 <instance part="U$3" gate="G$1" x="180.34" y="43.18"/>
-<instance part="U$4" gate="G$1" x="187.96" y="43.18"/>
 <instance part="C3" gate="G$1" x="137.16" y="15.24"/>
 <instance part="U3" gate="TLV2372-1" x="83.82" y="15.24" smashed="yes"/>
 <instance part="U3" gate="TLV2372-2" x="111.76" y="15.24" smashed="yes"/>
@@ -12391,6 +12394,16 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="DS1" gate="G$1" x="210.82" y="48.26" smashed="yes" rot="R180">
 <attribute name="NAME" x="208.28" y="47.7774" size="1.778" layer="95" rot="R180"/>
 </instance>
+<instance part="DS2" gate="G$1" x="124.46" y="127" smashed="yes" rot="R90">
+<attribute name="NAME" x="121.92" y="129.0574" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="Q3" gate="G$1" x="119.38" y="119.38" smashed="yes">
+<attribute name="NAME" x="121.92" y="116.84" size="1.778" layer="95"/>
+<attribute name="VALUE" x="106.68" y="114.3" size="1.778" layer="96"/>
+</instance>
+<instance part="R10" gate="G$1" x="111.76" y="119.38"/>
+<instance part="GND15" gate="1" x="121.92" y="111.76"/>
+<instance part="SUPPLY19" gate="G$1" x="121.92" y="132.08"/>
 </instances>
 <busses>
 </busses>
@@ -12723,6 +12736,10 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="208.28" y1="81.28" x2="208.28" y2="76.2" width="0.1524" layer="91"/>
 <label x="208.28" y="81.28" size="1.778" layer="95" rot="R270"/>
 </segment>
+<segment>
+<pinref part="Q3" gate="G$1" pin="E"/>
+<pinref part="GND15" gate="1" pin="GND"/>
+</segment>
 </net>
 <net name="SCK" class="0">
 <segment>
@@ -12898,6 +12915,17 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="J17" gate="G$1" pin="1"/>
 <wire x1="121.92" y1="81.28" x2="121.92" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="78.74" x2="124.46" y2="78.74" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="DS2" gate="G$1" pin="C"/>
+<wire x1="124.46" y1="129.54" x2="124.46" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="132.08" x2="121.92" y2="132.08" width="0.1524" layer="91"/>
+<pinref part="SUPPLY19" gate="G$1" pin="5V"/>
+</segment>
+<segment>
+<pinref part="J7" gate="G$1" pin="1"/>
+<wire x1="190.5" y1="78.74" x2="195.58" y2="78.74" width="0.1524" layer="91"/>
+<label x="190.5" y="78.74" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="A0" class="0">
@@ -13099,6 +13127,11 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="J6" gate="G$1" pin="4"/>
 <wire x1="187.96" y1="160.02" x2="193.04" y2="160.02" width="0.1524" layer="91"/>
 <label x="190.5" y="160.02" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="R10" gate="G$1" pin="1"/>
+<wire x1="106.68" y1="119.38" x2="101.6" y2="119.38" width="0.1524" layer="91"/>
+<label x="101.6" y="119.38" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="D10" class="0">
@@ -13332,7 +13365,7 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="114.3" y1="22.86" x2="114.3" y2="25.4" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="LIOUT" class="0">
+<net name="LI_OUT" class="0">
 <segment>
 <pinref part="U3" gate="TLV2372-1" pin="OUT"/>
 <wire x1="93.98" y1="15.24" x2="99.06" y2="15.24" width="0.1524" layer="91"/>
@@ -13486,12 +13519,11 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="190.5" y1="81.28" x2="195.58" y2="81.28" width="0.1524" layer="91"/>
 <label x="190.5" y="81.28" size="1.778" layer="95"/>
 </segment>
-</net>
-<net name="FAN+" class="0">
 <segment>
-<pinref part="J7" gate="G$1" pin="1"/>
-<wire x1="190.5" y1="78.74" x2="195.58" y2="78.74" width="0.1524" layer="91"/>
-<label x="190.5" y="78.74" size="1.778" layer="95"/>
+<pinref part="Q3" gate="G$1" pin="C"/>
+<pinref part="DS2" gate="G$1" pin="A"/>
+<wire x1="121.92" y1="124.46" x2="124.46" y2="124.46" width="0.1524" layer="91"/>
+<label x="124.46" y="121.92" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$11" class="0">
@@ -13537,6 +13569,12 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="203.2" y1="48.26" x2="203.2" y2="60.96" width="0.1524" layer="91"/>
 <pinref part="S1" gate="1" pin="P"/>
 <wire x1="203.2" y1="60.96" x2="208.28" y2="60.96" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$15" class="0">
+<segment>
+<pinref part="Q3" gate="G$1" pin="B"/>
+<pinref part="R10" gate="G$1" pin="2"/>
 </segment>
 </net>
 </nets>
