@@ -25,6 +25,7 @@
 //
 // Todo:
 //		- Change 3.3V to actual VCC reading from ADC
+//	- Get ADC working
 //    - Change error red light to blinking red light to save power
 //
 // ------------------------------------------------------------------------------------------------

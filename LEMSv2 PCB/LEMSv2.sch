@@ -12138,7 +12138,7 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </class>
 </classes>
 <parts>
-<part name="FRAME1" library="SparkFun-Aesthetics" deviceset="FRAME-LETTER" device=""/>
+<part name="FRAME1" library="SparkFun-Aesthetics" deviceset="FRAME-LETTER" device="NO_PACKAGE" value="FRAME-LETTERNO_PACKAGE"/>
 <part name="U1" library="LEMSv2" deviceset="SDMMC" device="06132"/>
 <part name="GND2" library="LEMSv2" deviceset="GND" device=""/>
 <part name="SUPPLY1" library="LEMSv2" deviceset="3.3V" device=""/>
@@ -12262,6 +12262,7 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="R23" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="75k"/>
 <part name="R24" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="75k"/>
 <part name="SUPPLY20" library="LEMSv2" deviceset="3.3V" device=""/>
+<part name="U$4" library="LEMSv2" deviceset="MOUNTINGHOLE" device="2.5"/>
 </parts>
 <sheets>
 <sheet>
@@ -12416,6 +12417,7 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="R23" gate="G$1" x="231.14" y="127"/>
 <instance part="R24" gate="G$1" x="231.14" y="121.92"/>
 <instance part="SUPPLY20" gate="G$1" x="223.52" y="127"/>
+<instance part="U$4" gate="G$1" x="187.96" y="43.18"/>
 </instances>
 <busses>
 </busses>
