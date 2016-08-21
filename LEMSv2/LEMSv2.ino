@@ -24,9 +24,7 @@
 //      possibilities for code divergence. Be aware.
 //
 // Todo:
-//		- Change 3.3V to actual VCC reading from ADC
-//	- Get ADC working
-//    - Change error red light to blinking red light to save power
+//    - Fix battery and Licor Resistors
 //
 // ------------------------------------------------------------------------------------------------
 
@@ -53,9 +51,8 @@
 #define RED_LED_PIN 7       // Red LED pin
 #define CARDSELECT 5        // SD  card chip select pin
 #define RTC_ALARM_PIN 9     // DS3231 Alarm pin
-#define SUN_PIN A5          // Li200 solar radiation pin
 #define WDIR_PIN A4         // Davis wind direction pin
-#define BAT_PIN A3          // Battery resistor div. pin
+#define BAT_PIN A5          // Battery resistor div. pin
 #define WSPD_PIN 8          // Davis wind speed pin
 #define USOIL_POW_PIN 2     // 5TM Power Pin, Upper - White 5TM Wire
 #define LSOIL_POW_PIN 38    // 5TM Power Pin, Lower - White 5TM Wire
@@ -79,6 +76,7 @@
 #include <Adafruit_SHT31.h>     // SHT31 - https://github.com/adafruit/Adafruit_SHT31
 #include <Adafruit_Sensor.h>    // Necessary for BMP280 Code - https://github.com/adafruit/Adafruit_Sensor
 #include <Adafruit_BMP280.h>    // BMP280 - https://github.com/adafruit/Adafruit_BMP280_Library
+#include <Adafruit_ADS1015.h>   // ADS1115 - https://github.com/soligen2010/Adafruit_ADS1X15
 #include <Adafruit_MLX90614.h>  // MLX90614 Library - https://github.com/adafruit/Adafruit-MLX90614-Library
 
 
@@ -95,21 +93,30 @@ const uint8_t deltaT = 10;      // Sampling time - Seconds
 File logfile;                       // File object
 char filename[] = "LEMXX_00.CSV";   // Initial filename
 
+// ADS1115
+Adafruit_ADS1115 ads;
+double vcc;                         // Actual value of 3.3V supply voltage
+
+// Battery Level
+double vBat;
+const unsigned long R1 = 1;         // Battery Side Resistor - See https://en.wikipedia.org/wiki/Voltage_divider
+const unsigned long R2 = 1;         // Ground Side Resistor
+
 // MLX90614
 #if IR
 double mlxIR;                                   // IR values from MLX90614
 double mlxAmb;                                  // Ambient temp values from MLX90614
-Adafruit_MLX90614 mlx = Adafruit_MLX90614();   // MLX90614 class
+Adafruit_MLX90614 mlx = Adafruit_MLX90614();    // MLX90614 class
 #endif
 
 // Upper soil
 #if UPPERSOIL
-d5TM upperSoil(USOIL_SER, 1200, USOIL_POW_PIN);
+d5TM upperSoil(USOIL_SER, 1200, USOIL_POW_PIN); // Initialize 5TM class
 #endif
 
 // Lower soil
 #if LOWERSOIL
-d5TM lowerSoil(LSOIL_SER, 1200, LSOIL_POW_PIN);
+d5TM lowerSoil(LSOIL_SER, 1200, LSOIL_POW_PIN); // Initialize 5TM class
 #endif
 
 // BMP280
@@ -128,7 +135,7 @@ double wSpd;                         // Wind speed
 #endif
 
 #if SUNLIGHT
-unsigned int rawSun = 0;                // Word to hold 12 bit sunlight values
+double rawSun = 0;                       // Float to hold voltage read from ADS1115
 const double liConst = 92.54E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
 const double ampResistor = 31000;        // Exact Resistor Value used by Op-Amp
 double sunlight = 0.0;                   // Converted Value
@@ -169,6 +176,10 @@ void setup() {
 
   // Turn on LED during setup process
   digitalWrite(GREEN_LED_PIN, HIGH);
+
+  // ADS1115 begin
+  ads.setGain(GAIN_ONE);        // 1x gain   +/- 4.096V  1 bit = 0.000125V
+  ads.begin();
 
   // Setup registers so interrupts wake board from sleep
   SYSCTRL->VREG.bit.RUNSTDBY = 1;              // Configure regulator to run normally in standby mode, so not limited to 50uA
@@ -211,7 +222,7 @@ void setup() {
 
   // Write Header - Debug header at end of setup()
   // Sensors also initiated here
-  logfile.print("Year,Month,Date,Hour,Minute,Second");
+  logfile.print("Year,Month,Date,Hour,Minute,Second,Bat_Lvl");
 #if IR
   mlx.begin();
   logfile.print(",MLX_IR_C,MLX_Amb_C");
@@ -233,8 +244,6 @@ void setup() {
   pinMode(WSPD_PIN, INPUT_PULLUP);
 #endif
 #if SUNLIGHT
-  pinMode(SUN_PIN, INPUT);      // Make sure ADC pin in correct state
-  digitalWrite(SUN_PIN, LOW);
   logfile.print(",Sunlight");
 #endif
 #if TEMPRH
@@ -291,6 +300,8 @@ void loop() {
 
   // Gather Measurements
   DateTime now = rtc.now();
+  vcc = ads.readADC_SingleEnded_V(1);
+  vBat = double(analogRead(BAT_PIN))*(3.3/pow(2, ADC_RES)) * double(R1 + R2) / double(R2);
 #if IR
   mlxIR = mlx.readObjectTempC();
   mlxAmb = mlx.readAmbientTempC();
@@ -306,8 +317,8 @@ void loop() {
   pressure = bmp.readPressure();
 #endif
 #if SUNLIGHT
-  rawSun = analogRead(SUN_PIN);
-  sunlight = double(rawSun) * (3.3 / double(pow(2, ADC_RES))) * (1.0 / ampResistor) * (1.0 / liConst); // Convert to W/m^2
+  rawSun = ads.readADC_SingleEnded_V(0);                     // LiCor Amplifier connected to AIN0
+  sunlight = rawSun * (1.0 / ampResistor) * (1.0 / liConst); // Convert to W/m^2
 #endif
 #if TEMPRH
   shtAmb = sht.readTemperature();
@@ -326,17 +337,19 @@ void loop() {
 
   // Log Data
   digitalWrite(GREEN_LED_PIN, rtcFlag);    // Turn LED on
-  logfile.print(now.year(), DEC);
+  logfile.print(now.year());
   logfile.print(",");
-  logfile.print(now.month(), DEC);
+  logfile.print(now.month());
   logfile.print(",");
-  logfile.print(now.day(), DEC);
+  logfile.print(now.day());
   logfile.print(",");
-  logfile.print(now.hour(), DEC);
+  logfile.print(now.hour());
   logfile.print(",");
-  logfile.print(now.minute(), DEC);
+  logfile.print(now.minute());
   logfile.print(",");
-  logfile.print(now.second(), DEC);
+  logfile.print(now.second());
+  logfile.print(",");
+  logfile.print(vBat);
 #if IR
   logfile.print(",");
   logfile.print(mlxIR);
@@ -394,6 +407,8 @@ void loop() {
   SerialUSB.print(now.minute(), DEC);
   SerialUSB.print(", ");
   SerialUSB.print(now.second(), DEC);
+  SerialUSB.print(", ");
+  SerialUSB.print(vBat);
 #if IR
   SerialUSB.print(", ");
   SerialUSB.print(mlxIR);
@@ -425,8 +440,8 @@ void loop() {
   SerialUSB.print(wSpd);
 #endif
 #if SUNLIGHT
-SerialUSB.print(", ");
-SerialUSB.print(sunlight);
+  SerialUSB.print(", ");
+  SerialUSB.print(sunlight);
 #endif
 #if TEMPRH
   SerialUSB.print(", ");
@@ -436,6 +451,9 @@ SerialUSB.print(sunlight);
 #endif
   SerialUSB.println();
 #endif
+
+  // Delay just a little bit for longer blink
+  delay(50);
 
   // Reset any variables and turn alarm on for next measurement
   windCount = 0;
@@ -458,9 +476,12 @@ void error(String errorMsg) {
 #if DEBUG
   SerialUSB.println(errorMsg);
 #endif
-
-  digitalWrite(RED_LED_PIN, HIGH);
-  while (true);
+  while (true) {
+    digitalWrite(RED_LED_PIN, HIGH);
+    delay(300);
+    digitalWrite(RED_LED_PIN, LOW);
+    delay(3000);
+  }
 }
 
 

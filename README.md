@@ -59,6 +59,7 @@ Only 3rd party software dependencies are included in this list. Libraries built 
 * [Adafruit Sensor Library](https://github.com/adafruit/Adafruit_Sensor)
 * [Adafruit BMP280 Library](https://github.com/adafruit/Adafruit_BMP280_Library)
 * [Adafruit MLX90614 Library](https://github.com/adafruit/Adafruit-MLX90614-Library)
+* [Soligen2010's fork of the Adafruit ADS1x15 Library](https://github.com/soligen2010/Adafruit_ADS1X15). The default Adafruit ADS1x15 library **doesn't** work.
 * In addition, the Sparkfun SAMD21 [board definition](https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json
 ) needs to be installed into the Arduino IDE. See [here](https://learn.sparkfun.com/tutorials/samd21-minidev-breakout-hookup-guide/setting-up-arduino) for more info.
 
