@@ -1061,7 +1061,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
-<designrules name="LaenPCBOrder">
+<designrules name="OSHDesignRules">
 <description language="de">&lt;b&gt;EAGLE Design Rules&lt;/b&gt;
 &lt;p&gt;
 Die Standard-Design-Rules sind so gewählt, dass sie für 
@@ -1533,13 +1533,13 @@ Please make sure your boards conform to these design rules.</description>
 <attribute name="NAME" x="71.882" y="57.9755" size="0.8128" layer="25" ratio="18" rot="R90"/>
 <attribute name="VALUE" x="72.517" y="57.9756" size="0.4064" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="R12" library="LEMSv2" package="_0805" value="" x="69.088" y="3.81" locked="yes" smashed="yes" rot="R90">
+<element name="R12" library="LEMSv2" package="_0805" value="56k" x="69.088" y="3.81" locked="yes" smashed="yes" rot="R90">
 <attribute name="NAME" x="67.945" y="1.8415" size="0.8128" layer="25" ratio="18" rot="R90"/>
-<attribute name="VALUE" x="70.739" y="2.2226" size="0.4064" layer="27" ratio="10" rot="R90"/>
+<attribute name="VALUE" x="69.6594" y="1.651" size="0.4064" layer="27" ratio="10" rot="R180"/>
 </element>
-<element name="R22" library="LEMSv2" package="_0805" value="" x="65.786" y="3.81" locked="yes" smashed="yes" rot="R270">
+<element name="R22" library="LEMSv2" package="_0805" value="16k" x="65.786" y="3.81" locked="yes" smashed="yes" rot="R270">
 <attribute name="NAME" x="63.881" y="4.1275" size="0.8128" layer="25" ratio="18" rot="R270"/>
-<attribute name="VALUE" x="64.135" y="5.3974" size="0.4064" layer="27" ratio="10" rot="R270"/>
+<attribute name="VALUE" x="65.3416" y="1.27" size="0.4064" layer="27" ratio="10"/>
 </element>
 <element name="R23" library="LEMSv2" package="_0805" value="75k" x="54.61" y="25.146"/>
 <element name="R24" library="LEMSv2" package="_0805" value="75k" x="54.61" y="44.196"/>

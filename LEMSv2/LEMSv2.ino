@@ -97,10 +97,10 @@ char filename[] = "LEMXX_00.CSV";   // Initial filename
 Adafruit_ADS1115 ads;
 double vcc;                         // Actual value of 3.3V supply voltage
 
-// Battery Level
+// Battery Level - Max output of 14.6V outputs 3.2444V on A5
 double vBat;
-const unsigned long R1 = 1;         // Battery Side Resistor - See https://en.wikipedia.org/wiki/Voltage_divider
-const unsigned long R2 = 1;         // Ground Side Resistor
+const unsigned long R1 = 56000;         // Battery Side Resistor - See https://en.wikipedia.org/wiki/Voltage_divider
+const unsigned long R2 = 16000;         // Ground Side Resistor
 
 // MLX90614
 #if IR

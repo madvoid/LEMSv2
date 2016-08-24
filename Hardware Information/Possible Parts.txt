@@ -23,3 +23,12 @@ Jumper Cables:
 
 Resettable fuse:
 http://www.digikey.com/product-search/en/circuit-protection/ptc-resettable-fuses/656272?k=&pkeyword=&pv683=127&FV=400006%2C403989%2Caac0065%2Caac0073%2Caac0074%2Caac007d%2Caac007f%2Caac0090%2Caac0092%2Caac0093%2Caac0094%2Caac0095%2Caac009c%2Caac00a0%2Caac00a5%2Caac00aa%2Caac00ae%2Cfff4000a%2Cfff80390%2Caa80061&mnonly=0&newproducts=0&ColumnSort=0&page=1&stock=1&quantity=0&ptm=0&fid=0&pageSize=25
+
+PCB Assembly:
+http://pcbshopper.com
+http://www.7pcb.com
+https://www.screamingcircuits.com
+http://www.nexpcb.com
+http://www.4pcb.com/Assembly-Services.html
+https://macrofab.com
+https://circuithub.com

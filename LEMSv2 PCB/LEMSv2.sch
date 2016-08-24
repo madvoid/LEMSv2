@@ -12256,8 +12256,8 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="R10" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="4.3k"/>
 <part name="GND15" library="LEMSv2" deviceset="GND" device=""/>
 <part name="SUPPLY19" library="LEMSv2" deviceset="5V" device=""/>
-<part name="R12" library="LEMSv2" deviceset="RESISTOR" device="_0805"/>
-<part name="R22" library="LEMSv2" deviceset="RESISTOR" device="_0805"/>
+<part name="R12" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="56k"/>
+<part name="R22" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="16k"/>
 <part name="GND16" library="LEMSv2" deviceset="GND" device=""/>
 <part name="R23" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="75k"/>
 <part name="R24" library="LEMSv2" deviceset="RESISTOR" device="_0805" value="75k"/>
@@ -12272,7 +12272,7 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
 <instance part="FRAME1" gate="V" x="147.32" y="0"/>
 <instance part="U1" gate="G$1" x="220.98" y="154.94" rot="R180"/>
-<instance part="GND2" gate="1" x="238.76" y="177.8" rot="R180"/>
+<instance part="GND2" gate="1" x="241.3" y="180.34" rot="R90"/>
 <instance part="SUPPLY1" gate="G$1" x="241.3" y="162.56"/>
 <instance part="BT1" gate="G$1" x="101.6" y="175.26"/>
 <instance part="GND3" gate="1" x="109.22" y="172.72"/>
@@ -12572,7 +12572,7 @@ Standard 5-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="238.76" y1="165.1" x2="238.76" y2="167.64" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="VSS2"/>
 <wire x1="238.76" y1="167.64" x2="238.76" y2="172.72" width="0.1524" layer="91"/>
-<wire x1="238.76" y1="172.72" x2="238.76" y2="175.26" width="0.1524" layer="91"/>
+<wire x1="238.76" y1="172.72" x2="238.76" y2="180.34" width="0.1524" layer="91"/>
 <wire x1="233.68" y1="167.64" x2="238.76" y2="167.64" width="0.1524" layer="91"/>
 <junction x="238.76" y="167.64"/>
 <pinref part="U1" gate="G$1" pin="GND"/>

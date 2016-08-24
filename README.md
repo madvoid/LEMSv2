@@ -2,7 +2,6 @@
 This is the repository for the second version of the LEMS Sensor Stations. Stay tuned, information will be added as it is generated. A majority of the documentation will be added to this file.
 
 ### General TODO
-1. Add battery voltage measurement to code and PCB
 1. Create time set code that's easily accessible
 2. Keep documentation and File List updated
 4. Try SDI-12 code
@@ -10,12 +9,6 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 ### PCB TODO
 See `Bill of Materials.xlsx` for more todo
 
-1. Consider assembly. Possible sources:
-	* https://www.screamingcircuits.com
-	* http://www.nexpcb.com
-	* http://www.4pcb.com
-	* http://www.tinkerbee.com/pcb-assembly-service.html/
-	* http://www.seeedstudio.com/fusion_pcb.html 
 
 ### File List
 * Data Sheets/
