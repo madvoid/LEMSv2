@@ -1,5 +1,5 @@
 *** Possible parts to use for LEMSv2 ***
-- Moved from "Bill of Materials.xlsx"
+Moved from "Bill of Materials.xlsx"
 
 Custom Enclosure:
 - http://www.toollessplasticenclosures.com
@@ -28,7 +28,6 @@ PCB Assembly:
 http://pcbshopper.com
 http://www.7pcb.com
 https://www.screamingcircuits.com
-http://www.nexpcb.com
 http://www.4pcb.com/Assembly-Services.html
 https://macrofab.com
 https://circuithub.com
