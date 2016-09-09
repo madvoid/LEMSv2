@@ -5,9 +5,9 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 1. Create time set code that's easily accessible
 2. Keep documentation and File List updated
 4. Try SDI-12 code
+5. Add thanks to PCB fab/assy house
 
 ### PCB TODO
-See `Bill of Materials.xlsx` for more todo
 
 
 ### File List

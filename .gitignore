@@ -16,5 +16,8 @@ Data\ Sheets/Decagon\ RT1.pdf
 # Anything in Misc folder
 Miscellaneous/*
 
+# Accounting Stuff
+Accounting/*
+
 # Excel temporary
 ~$*.xls*
