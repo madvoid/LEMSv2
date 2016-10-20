@@ -2,8 +2,9 @@
 This is the repository for the second version of the LEMS Sensor Stations. Stay tuned, information will be added as it is generated. A majority of the documentation will be added to this file.
 
 ### General TODO
-1. Keep documentation and File List updated
-2. Try SDI-12 code
+1. Double check ADC resolution in code
+2. Keep documentation and File List updated
+3. Try SDI-12 code
 
 ### PCB TODO
 1. The assembled PCBs work! Anything added here is for future sub-revisions (2.1, 2.2, etc.)
