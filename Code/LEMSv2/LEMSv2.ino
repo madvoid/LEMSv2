@@ -121,7 +121,7 @@ d5TM lowerSoil(LSOIL_SER, 1200, LSOIL_POW_PIN); // Initialize 5TM class
 
 // BMP280
 #if PRESSURE
-Adafruit_BMP280 bmp;        // Initialize BMP280 class
+Adafruit_BMP280 bmp;         // Initialize BMP280 class
 double pressure;             // Barometric pressure
 double bmpAmb;               // Temperature from BMP280
 #endif
@@ -301,7 +301,7 @@ void loop() {
   // Gather Measurements
   DateTime now = rtc.now();
   vcc = ads.readADC_SingleEnded_V(1);
-  vBat = double(analogRead(BAT_PIN))*(3.3/pow(2, ADC_RES)) * double(R1 + R2) / double(R2);
+  vBat = double(analogRead(BAT_PIN)) * (vcc / pow(2, ADC_RES)) * double(R1 + R2) / double(R2);
 #if IR
   mlxIR = mlx.readObjectTempC();
   mlxAmb = mlx.readAmbientTempC();
@@ -476,6 +476,7 @@ void error(String errorMsg) {
 #if DEBUG
   SerialUSB.println(errorMsg);
 #endif
+  digitalWrite(GREEN_LED_PIN, LOW);   // Ensure green LED is off
   while (true) {
     digitalWrite(RED_LED_PIN, HIGH);
     delay(300);

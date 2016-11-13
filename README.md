@@ -2,9 +2,8 @@
 This is the repository for the second version of the LEMS Sensor Stations. Stay tuned, information will be added as it is generated. A majority of the documentation will be added to this file.
 
 ### General TODO
-1. Double check ADC resolution in code
-2. Keep documentation and File List updated
-3. Try SDI-12 code
+1. Check validity of filenames with more than 8 characters
+2. Try SDI-12 code
 
 ### PCB TODO
 1. The assembled PCBs work! Anything added here is for future sub-revisions (2.1, 2.2, etc.)
@@ -13,6 +12,7 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 
 ### File List
 * Code/
+  * `Code Instructions.md` - Instructions for uploading
   * LEMSv2/
     * `LEMSv2.ino` - LEMS Arduino Code
     * `DS3231_Alarm1.h` - Header file for corresponding `.cpp` file
@@ -44,7 +44,7 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
       * Contains Solidworks files for Li200R base
     * STL Files/
       * Contains print ready STL files for Li200R base
-    * `Tool Information.md` - Tools required for making the Li200R base
+    * `Build Instructions.md` - Tools required for making the Li200R base
   * `Pin List.xlsx` - Pin connection list for SAMD21 Dev Breakout Board
   * `Possible Parts.txt` - Potential parts/Manufacturers to add/use in the future
   * Transimpedance Amplifier/
