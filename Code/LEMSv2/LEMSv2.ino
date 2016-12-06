@@ -328,9 +328,9 @@ void loop() {
   wDir = (double)analogRead(WDIR_PIN) * 360.0 / pow(2, ADC_RES);  // Map from analog count to 0-360, with 360=North
   startTime = millis();
   attachInterrupt(WSPD_PIN, windCounter, RISING);                 // Attach interrupt for wind speed pin
-  while (millis() - startTime < 2250);                            // Measure number of counts in 2.5 sec
+  while (millis() - startTime < 4500);                            // Measure number of counts in 2.5 sec
   detachInterrupt(WSPD_PIN);
-  wSpd = windCount;                                               // mph = (counts)*(2.25)/(sample period in seconds). If period is 2.25 seconds, mph = counts
+  wSpd = windCount*(2.25/4.5);                                               // mph = (counts)*(2.25)/(sample period in seconds). If period is 2.25 seconds, mph = counts
   wSpd = 0.447 * wSpd;                                            // Convert to m/s
 #endif
 
