@@ -34,6 +34,9 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
       * `d5TM.cpp` - Library used to interact with 5TM. Developed here then copied to main code folder
   * Time_Set/
     * `Time_Set.ino` - Code used to set the time on the DS3231 real time clock
+* Data Manipulation/
+  * `LemsPlot.m` - View LEMSv2 data plots. Not perfectly adaptable to any file, but will work for a fully instrumented station. To work properly, requires the [Intelligent Dynamic Date Ticks](https://www.mathworks.com/matlabcentral/fileexchange/27075-intelligent-dynamic-date-ticks) file from MathWorks. Can work without it though by commenting out the lines that use it.
+  * `importfile.m` - Used to import the LEMSv2 data files. Can only be used on data files from fully instrumented LEMS.
 * Hardware Information/
   * `Bill of Materials.xlsx` - Complete parts list
   * `Calibration Constants.xlsx` - Calibration constants for various instruments. For now, only contains Li200 constants.
@@ -64,6 +67,7 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
     * `OSHPark_2layer_Eagle7.2.cam` - Modified cam job for OSH Park
   * LEMSv2 PCB Library/
     * `LEMSv2.lbr` - Parts used in the LEMSv2 shield
+  * `SAMD21 Breakout Board.jpg` - Reference picture for microcontroller board
 * `Possible Problems.md` - List of potential hardware problems in the LEMS. Prefer to not have duplicate entries, i.e. one line per problem.
 * `README.md` - If you read this line you're actually reading the README. Good job!
 

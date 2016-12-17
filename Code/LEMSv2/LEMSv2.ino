@@ -137,7 +137,7 @@ double wSpd;                         // Wind speed
 #if SUNLIGHT
 double rawSun = 0;                       // Float to hold voltage read from ADS1115
 const double liConst = 92.54E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
-const double ampResistor = 31000;        // Exact Resistor Value used by Op-Amp
+const double ampResistor = 31000;        // Exact Resistor Value used by Op-Amp in Ohms
 double sunlight = 0.0;                   // Converted Value
 #endif
 
