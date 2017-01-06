@@ -6,7 +6,7 @@ clear all, close all, clc
 
 
 %% Get File and Data
-[FileName, PathName, FilterIndex] = uigetfile('~/Downloads', 'Select the Data File');
+[FileName, PathName, FilterIndex] = uigetfile('~/Downloads/*.csv', 'Select the Data File');
 fullFileName = strcat(PathName, FileName);
 % fullFileName = '~/Downloads/LEMS/LEMSL_00.CSV';       % UncommeXnt this line and comment above two to hard code file path
 [Year,Month,Date,Hour,Minute,Second,Bat_Lvl,MLX_IR_C,MLX_Amb_C,Upper_Soil_Temp,Upper_Soil_Mois,Lower_Soil_Temp,Lower_Soil_Mois,Pressure,BMP_Amb,Wind_Dir,Wind_Spd,Sunlight,SHT_Amb_C,SHT_Hum_Pct] = importfile(fullFileName);
