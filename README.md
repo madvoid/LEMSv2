@@ -3,7 +3,7 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 
 ### General TODO
 1. Check validity of filenames with more than 8 characters
-2. Try SDI-12 code
+2. Add MLX housing parts to bill of materials.
 
 ### PCB TODO
 1. The assembled PCBs work! Anything added here is for future sub-revisions (2.1, 2.2, etc.)
@@ -23,9 +23,17 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
     * ADS1115_Test/
       * `ADS1115_Test.ino` - Test code for ADS1115 ADC
     * DS3231_Test/
-      * `DS3231_Test.ino` - Test code for DS3231. Test DS3231 alarm 1
+      * `DS3231_Test.ino` - Test code for DS3231 RTC. Test DS3231 alarm 1
       * `DS3231_Alarm1.h` - Header file for corresponding `.cpp` file
       * `DS3231_Alarm1.c` - Library used to set DS3231 Alarm 1. Developed in here then copied to main code folder
+    * DS2_Test/
+      * `DS2_Test.ino` - Test code for DS2 anemometer
+      * `DS2.h` - Header file for corresponding `.cpp` file
+      * `DS2.cpp` - Library used to interact with DS2. Developed here then copied to main code folder
+      * `LICENSE` - License to be included with the `SDI12_Zero` library
+      * `LICENSE-examples.md` - License to be included with the `SDI12_Zero` library
+      * `SDI12_Zero.h` - Header file for corresponding `.cpp` file
+      * `SDI12_Zero.cpp` - Library used by DS2 library to interact with DS2. Implements the SDI12 protocal for Arduino Zero.
     * Li200_Test/
       * `Li200_Test.ino` - Test Li200 with intermediate values in calculations printed
     * Test_5TM/
@@ -48,6 +56,12 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
     * STL Files/
       * Contains print ready STL files for Li200R base
     * `Build Instructions.md` - Tools required for making the Li200R base
+  * MLX Housing/
+    * `MLX Housing Build Instructions` - Build instructions for MLX90615 housing
+  * PCB/
+    * `LEMSv2 Board.pdf` - PDF of PCB for easy reference
+    * `LEMSv2 Schematic.pdf` - PDF of schematic for easy reference
+    * `SAMD21 Breakout Board.jpg` - Reference picture for microcontroller board
   * `Pin List.xlsx` - Pin connection list for SAMD21 Dev Breakout Board
   * `Possible Parts.txt` - Potential parts/Manufacturers to add/use in the future
   * Transimpedance Amplifier/
@@ -59,15 +73,12 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
     * `Centroid_ScreamingCircuits_smd.ulp` - Eagle ULP script to create centroid data for screaming circuits
     * Gerbers/
       * Contains gerbers for board, plus the panelized gerbers supplied by OSH Park. Also contains the centroid file for Screaming Circuits.
-    * `LEMSv2 Board.pdf` - PDF of PCB for easy reference
-    * `LEMSv2 Schematic.pdf` - PDF of schematic for easy reference
     * `LEMSv2.sch` - LEMSv2 shield schematic
     * `LEMSv2.brd` - LEMSv2 shield layout
     * `OSH_DesignRules.dru` - Eagle design rules for OSH Park
     * `OSHPark_2layer_Eagle7.2.cam` - Modified cam job for OSH Park
   * LEMSv2 PCB Library/
     * `LEMSv2.lbr` - Parts used in the LEMSv2 shield
-  * `SAMD21 Breakout Board.jpg` - Reference picture for microcontroller board
 * `Possible Problems.md` - List of potential hardware problems in the LEMS. Prefer to not have duplicate entries, i.e. one line per problem.
 * `README.md` - If you read this line you're actually reading the README. Good job!
 
@@ -91,3 +102,4 @@ Only 3rd party software dependencies are included in this list. Libraries built 
 
 ### Acknowledgements
 * Thanks to [Sparkfun](https://www.sparkfun.com) and [Adafruit](https://www.adafruit.com) for Arduino libraries, components, tutorials, and eagle parts. Many designs and eagle components are directly used from them. Also thanks to [OSH Park](www.oshpark.com) and [Screaming Circuits](www.screamingcircuits.com) for the excellent PCBs and assembly. They were instrumental in getting LEMSv2 completed.
+* Thanks to EnviroDIY for their excellent [SDI12 Arduino Library](https://github.com/EnviroDIY/Arduino-SDI-12) library. The only reason this isn't included above in the dependency list is because a customized version is used for LEMSv2.

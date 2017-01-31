@@ -21,3 +21,6 @@ Accounting/*
 
 # Excel temporary
 ~$*.xls*
+
+# MLX Word Document
+Hardware\ Information/MLX\ Housing/MLX_Documentation.docx
