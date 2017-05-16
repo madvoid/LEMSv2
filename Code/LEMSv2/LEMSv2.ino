@@ -38,6 +38,7 @@
 #define SUNLIGHT 1
 #define WIND 1
 #define PRESSURE 1
+#define SONIC 1
 
 
 
@@ -60,6 +61,7 @@
 #define LSOIL_SER Serial    // 5TM Serial Port, Lower RX = D31, TX = D30; Red 5TM Wire
 #define FAN_PIN 11          // Pin for cooling fan
 #define ADC_RES 12          // Number of bits ADC has
+#define SONIC_PIN 10        // DS2 Data Pin, Red DS2 Wire
 
 
 
@@ -68,6 +70,7 @@
 // Libraries --------------------------------------------------------------------------------------
 #include <SD.h>			            // SD Card Library
 #include <SPI.h>		            // SPI Library
+#include "DS2.h"                // DS2 Library
 #include "d5TM.h"               // 5TM Library
 #include <math.h>               // Math Library - https://www.arduino.cc/en/Math/H
 #include <Wire.h>		            // I2C Library
@@ -91,7 +94,7 @@ const uint8_t deltaT = 10;      // Sampling time - Seconds
 
 // SD Card
 File logfile;                       // File object
-char filename[] = "LEMXX_00.CSV";   // Initial filename
+char filename[] = "LEMSA_00.CSV";   // Initial filename
 
 // ADS1115
 Adafruit_ADS1115 ads;
@@ -137,7 +140,7 @@ double wSpd;                         // Wind speed
 #if SUNLIGHT
 double rawSun = 0;                       // Float to hold voltage read from ADS1115
 const double liConst = 92.54E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
-const double ampResistor = 31000;        // Exact Resistor Value used by Op-Amp in Ohms
+const double ampResistor = 36500;        // Exact Resistor Value used by Op-Amp in Ohms
 double sunlight = 0.0;                   // Converted Value
 #endif
 
@@ -146,6 +149,14 @@ double sunlight = 0.0;                   // Converted Value
 Adafruit_SHT31 sht = Adafruit_SHT31();
 double shtAmb;               // Ambient temp values from SHT21
 double shtHum;               // Relative humidity values from SHT21
+#endif
+
+// DS2
+#if SONIC
+DS2 sonic(SONIC_PIN, '0');   // Initialize DS2 class
+double sonicDir;             // Wind direction from sonic
+double sonicSpd;             // Wind speed from sonic
+double sonicTmp;             // Wind temperature from sonic
 #endif
 
 
@@ -242,6 +253,10 @@ void setup() {
 #if WIND
   logfile.print(",Wind_Dir,Wind_Spd");
   pinMode(WSPD_PIN, INPUT_PULLUP);
+#if SONIC
+  logfile.print(",Sonic_Dir,Sonic_Spd,Sonic_Tmp");
+  sonic.begin();
+#endif
 #endif
 #if SUNLIGHT
   logfile.print(",Sunlight");
@@ -324,6 +339,9 @@ void loop() {
   shtAmb = sht.readTemperature();
   shtHum = sht.readHumidity();
 #endif
+#if SONIC
+  sonic.getMeasurements();
+#endif
 #if WIND
   wDir = (double)analogRead(WDIR_PIN) * 360.0 / pow(2, ADC_RES);  // Map from analog count to 0-360, with 360=North
   startTime = millis();
@@ -379,6 +397,14 @@ void loop() {
   logfile.print(wDir);
   logfile.print(",");
   logfile.print(wSpd);
+#endif
+#if SONIC
+  logfile.print(",");
+  logfile.print(sonic.wDir);
+  logfile.print(",");
+  logfile.print(sonic.wSpd);
+  logfile.print(",");
+  logfile.print(sonic.wTmp);
 #endif
 #if SUNLIGHT
   logfile.print(",");
@@ -438,6 +464,14 @@ void loop() {
   SerialUSB.print(wDir);
   SerialUSB.print(", ");
   SerialUSB.print(wSpd);
+#endif
+#if SONIC
+  SerialUSB.print(",");
+  SerialUSB.print(sonic.wDir);
+  SerialUSB.print(",");
+  SerialUSB.print(sonic.wSpd);
+  SerialUSB.print(",");
+  SerialUSB.print(sonic.wTmp);
 #endif
 #if SUNLIGHT
   SerialUSB.print(", ");
