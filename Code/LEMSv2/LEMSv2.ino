@@ -31,18 +31,22 @@
 
 
 // Sensor Defines: Plugged in sensors should be defined as 1 --------------------------------------
-#define TEMPRH 1
-#define IR 1
-#define UPPERSOIL 1
-#define LOWERSOIL 1
-#define SUNLIGHT 1
-#define WIND 1
+#define TEMPRH 0
+#define IR 0
+#define UPPERSOIL 0
+#define LOWERSOIL 0
+#define SUNLIGHT 0
+#define WIND 0
 #define PRESSURE 1
 #define SONIC 1
 
 
 
 // Other Defines ----------------------------------------------------------------------------------
+// !! ALERT !! When DEBUG is defined as 0, the LEMSv2 will only work properly under battery or
+// external power, NOT under USB power. If you would like to power the LEMS via USB but have DEBUG
+// set to 0, uncomment the three lines centered around the line that has USBDevice.detach(); This
+// should be near line 207 in the code.
 #define DEBUG 0
 
 
@@ -50,6 +54,7 @@
 // Pin Defines ------------------------------------------------------------------------------------
 #define GREEN_LED_PIN 6     // Green LED pin
 #define RED_LED_PIN 7       // Red LED pin
+#define BLUE_LED_PIN 13     // Built-in Blue LED - Sparkfun SAMD21 Dev Board
 #define CARDSELECT 5        // SD  card chip select pin
 #define RTC_ALARM_PIN 9     // DS3231 Alarm pin
 #define WDIR_PIN A4         // Davis wind direction pin
@@ -94,7 +99,7 @@ const uint8_t deltaT = 10;      // Sampling time - Seconds
 
 // SD Card
 File logfile;                       // File object
-char filename[] = "LEMSA_00.CSV";   // Initial filename
+char filename[] = "LEMSM_00.CSV";   // Initial filename
 
 // ADS1115
 Adafruit_ADS1115 ads;
@@ -195,9 +200,12 @@ void setup() {
   // Setup registers so interrupts wake board from sleep
   SYSCTRL->VREG.bit.RUNSTDBY = 1;              // Configure regulator to run normally in standby mode, so not limited to 50uA
   SYSCTRL->DFLLCTRL.bit.RUNSTDBY = 1;          // Enable DFLL48MHz clock in standby mode
-  //#if DEBUG
-  //  USBDevice.detach();                          // Disable USB device to avoid USB interrupts. Necessitates double press of reset button to upload though
-  //#endif                                         // Only needed when connected via native USB
+
+  // Disable USB device to avoid USB interrupts. Necessitates double press of reset button to upload though
+  // This is only needed when DEBUG is 0, AND you want to power the LEMSv2 from USB power for some reason
+//  #if !DEBUG
+//    USBDevice.detach();
+//  #endif
 
   // RTC Setup
   if (!rtc.begin()) {
@@ -253,10 +261,10 @@ void setup() {
 #if WIND
   logfile.print(",Wind_Dir,Wind_Spd");
   pinMode(WSPD_PIN, INPUT_PULLUP);
+#endif
 #if SONIC
   logfile.print(",Sonic_Dir,Sonic_Spd,Sonic_Tmp");
   sonic.begin();
-#endif
 #endif
 #if SUNLIGHT
   logfile.print(",Sunlight");
@@ -290,7 +298,6 @@ void setup() {
   SerialUSB.print(" || Setting alarm to ");
   SerialUSB.print(setSec);
   SerialUSB.println(" seconds from now. Entering Loop...");
-  //  SerialUSB.print("Year,Month,Date,Hour,Minute,Second");
   SerialUSB.println();
 #endif
 
@@ -348,7 +355,7 @@ void loop() {
   attachInterrupt(WSPD_PIN, windCounter, RISING);                 // Attach interrupt for wind speed pin
   while (millis() - startTime < 4500);                            // Measure number of counts in 4.5 sec
   detachInterrupt(WSPD_PIN);
-  wSpd = windCount*(2.25/4.5);                                    // mph = (counts)*(2.25)/(sample period in seconds). If period is 2.25 seconds, mph = counts
+  wSpd = windCount * (2.25 / 4.5);                                // mph = (counts)*(2.25)/(sample period in seconds). If period is 2.25 seconds, mph = counts
   wSpd = 0.447 * wSpd;                                            // Convert to m/s
 #endif
 
@@ -466,11 +473,11 @@ void loop() {
   SerialUSB.print(wSpd);
 #endif
 #if SONIC
-  SerialUSB.print(",");
+  SerialUSB.print(", ");
   SerialUSB.print(sonic.wDir);
-  SerialUSB.print(",");
+  SerialUSB.print(", ");
   SerialUSB.print(sonic.wSpd);
-  SerialUSB.print(",");
+  SerialUSB.print(", ");
   SerialUSB.print(sonic.wTmp);
 #endif
 #if SUNLIGHT
@@ -490,7 +497,9 @@ void loop() {
   delay(50);
 
   // Reset any variables and turn alarm on for next measurement
+#if WIND
   windCount = 0;
+#endif
   rtcAlarm1.alarmSecondsSet(now, deltaT);
   rtcFlag = false;
 
