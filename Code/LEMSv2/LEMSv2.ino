@@ -99,7 +99,7 @@ const uint8_t deltaT = 10;      // Sampling time - Seconds
 
 // SD Card
 File logfile;                       // File object
-char filename[] = "LEMSM_00.CSV";   // Initial filename
+char filename[] = "LEMST_00.CSV";   // Initial filename
 
 // ADS1115
 Adafruit_ADS1115 ads;
