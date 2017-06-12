@@ -85,7 +85,7 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 
 
 ### Dependencies
-Only 3rd party software dependencies are included in this list. Libraries built into the Arduino software or created for the LEMSv2 software isn't included.
+Only 3rd party software dependencies are included in this list. Libraries built into the Arduino software or created for the LEMSv2 software isn't included. You will need the most recent version of the [Arduino IDE](https://www.arduino.cc/en/Main/Software) installed.
 
 * [Adafruit RTC Library](https://github.com/adafruit/RTClib)
 * [Adafruit SHT31 Library](https://github.com/adafruit/Adafruit_SHT31)
