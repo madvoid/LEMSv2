@@ -29,16 +29,18 @@ Please read through all instructions before starting!
    ```
    Of course, this doesn't matter if a Li200R isn't plugged in.
 
-12. Compile and upload code to the LEMSv2. Unplug soon after upload is finished so program doesn't start and file isn't made.
+12. On line 147, enter the resistor value of the resistor soldered into R14 of the LEMSv2 PCB. This information can be found in `../Hardware Information/Calibration Constants.xlsx`. The resistor value to enter is under the *Actual Resistor* column of the spreadsheet. Enter the value in Ohms. Also, please remember that each LEMSv2 is designed to work with a specific pyranometer, which is why each LEMSv2 has a very specific resistor soldered to it. This means that using a different pyranometer on a given LEMSv2 can give less precise/accurate results.
 
-13. Insert an SD card into the holder
+13. Compile and upload code to the LEMSv2. Unplug soon after upload is finished so program doesn't start and file isn't made.
 
-14. After wiring and installation, if a battery is plugged in, turning the switch from off to on should turn on the LEMSv2. 
+14. Insert an SD card into the holder
 
-15. After a short amount of time, the green light should turn on for about three seconds. If a blinking red light shows up, something is wrong. First check the SD card and make sure it works, is formatted, and is plugged in correctly.
+15. After wiring and installation, if a battery is plugged in, turning the switch from off to on should turn on the LEMSv2. 
 
-16. After the three seconds, the green light should turn off. After that, wait until the green light blinks a few times. If the green light doesn't blink after about 20 seconds, something is wrong. Check the sensors and connections, and try power cycling the LEMSv2.
+16. After a short amount of time, the green light should turn on for about three seconds. If a blinking red light shows up, something is wrong. First check the SD card and make sure it works, is formatted, and is plugged in correctly.
 
-17. When everything is running properly, the green light should blink every 10 seconds. 
+17. After the three seconds, the green light should turn off. After that, wait until the green light blinks a few times. If the green light doesn't blink after about 20 seconds, something is wrong. Check the sensors and connections, and try power cycling the LEMSv2.
 
-18. To turn off, wait until green light blinks, and turn off shortly after.
+18. When everything is running properly, the green light should blink every 10 seconds. 
+
+19. To turn off, wait until green light blinks, and turn off shortly after.
