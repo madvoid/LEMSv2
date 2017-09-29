@@ -13,9 +13,9 @@
 
 ### Build Instructions
 
-1. 3D print bottom and top plate. First test is with sparse fill but solid fill will work too (more expensive but better)
+1. 3D print bottom and top plate. First test is with sparse fill but solid fill will work too (more expensive but better). Keep in mind that a sparse fill will absorb water better, and will also leak cleaning fluid for some time after manufacturing.
 2. If the prints are completely dry, this would be a good point to paint the pieces for weather resistance
-3. Tap the three holes on the face of the bottom plate with the 10-32 tap. 
+3. Tap the three holes on the face of the bottom plate with the 10-32 tap
 4. Tap the three holes on the edge of the bottom plate and the one hole on the edge of the top plate with the 10-32 STI tap
 5. Insert helicoils into all edge holes that have been tapped with 10-32 STI tap
 6. This is another point where paint can be applied
