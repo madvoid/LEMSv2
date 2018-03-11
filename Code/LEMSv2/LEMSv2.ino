@@ -31,14 +31,15 @@
 
 
 // Sensor Defines: Plugged in sensors should be defined as 1 --------------------------------------
-#define TEMPRH 0
-#define IR 0
-#define UPPERSOIL 0
-#define LOWERSOIL 0
-#define SUNLIGHT 0
-#define WIND 0
+// TODO: Depreciate Wind
+#define TEMPRH 1
+#define IR 1
+#define UPPERSOIL 1
+#define LOWERSOIL 1
+#define SUNLIGHT 1
 #define PRESSURE 1
 #define SONIC 1
+#define WIND 0
 
 
 
@@ -47,7 +48,7 @@
 // external power, NOT under USB power. If you would like to power the LEMS via USB but have DEBUG
 // set to 0, uncomment the three lines centered around the line that has USBDevice.detach(); This
 // should be near line 207 in the code.
-#define DEBUG 0
+#define DEBUG 1
 
 
 
@@ -99,7 +100,7 @@ const uint8_t deltaT = 10;      // Sampling time - Seconds
 
 // SD Card
 File logfile;                       // File object
-char filename[] = "LEMST_00.CSV";   // Initial filename
+char filename[] = "LEMSE_00.CSV";   // Initial filename
 
 // ADS1115
 Adafruit_ADS1115 ads;

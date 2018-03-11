@@ -2,8 +2,11 @@
 This is the repository for the second version of the LEMS Sensor Stations. Stay tuned, information will be added as it is generated. A majority of the documentation will be added to this file.
 
 ### General TODO
+
 1. Check validity of filenames with more than 8 characters
-2. Add MLX housing parts to bill of materials.
+2. Decagon, the manufacturer of the 5TM soil sensors, has changed their name to Meter, and the 5TM is now called the ECH20 5TM. The documentation will need to be changed.
+3. Major Change: Change the code to read parameters from a text file on the SD card. See if possible to read code from SD card.
+4. Delete or separate "File List" from README? Makes it clunky, hard to keep updated. Goal is for files to self explanatory 
 
 ### PCB TODO
 1. The assembled PCBs work! Anything added here is for future sub-revisions (2.1, 2.2, etc.)
@@ -36,6 +39,8 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
       * `SDI12_Zero.cpp` - Library used by DS2 library to interact with DS2. Implements the SDI12 protocal for Arduino Zero.
     * Li200_Test/
       * `Li200_Test.ino` - Test Li200 with intermediate values in calculations printed
+    * Teros21_Test/
+      * `Teros21_Test.ino` - Test Teros21 and library.
     * Test_5TM/
       * `Test_5TM.ino` - Test code for 5TM Library. 5TM has been working since LEMSv1 but is now made into a library.
       * `d5TM.h` - Header file for corresponding `.cpp` file
@@ -92,14 +97,16 @@ Only 3rd party software dependencies are included in this list. Libraries built 
 * [Adafruit Sensor Library](https://github.com/adafruit/Adafruit_Sensor)
 * [Adafruit BMP280 Library](https://github.com/adafruit/Adafruit_BMP280_Library)
 * [Adafruit MLX90614 Library](https://github.com/adafruit/Adafruit-MLX90614-Library)
+* [EnviroDIY SDI-12 Library](https://github.com/EnviroDIY/Arduino-SDI-12) 
 * [Soligen2010's fork of the Adafruit ADS1x15 Library](https://github.com/soligen2010/Adafruit_ADS1X15). The default Adafruit ADS1x15 library **doesn't** work.
 * In addition, the Sparkfun SAMD21 [board definition](https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json
   ) needs to be installed into the Arduino IDE. See [here](https://learn.sparkfun.com/tutorials/samd21-minidev-breakout-hookup-guide/setting-up-arduino) for more info.
 
 ### Miscellaneous Notes
+
 - ADS1115 single ended resolution calculation information can be found [here](https://e2e.ti.com/support/data_converters/precision_data_converters/f/73/t/489070)
 - ADS1115 over range input information can be found [here](https://e2e.ti.com/support/data_converters/precision_data_converters/f/73/p/398187/1407689#1407689) and [here](https://e2e.ti.com/support/data_converters/precision_data_converters/f/73/t/378122)
 
 ### Acknowledgements
+
 * Thanks to [Sparkfun](https://www.sparkfun.com) and [Adafruit](https://www.adafruit.com) for Arduino libraries, components, tutorials, and eagle parts. Many designs and eagle components are directly used from them. Also thanks to [OSH Park](www.oshpark.com) and [Screaming Circuits](www.screamingcircuits.com) for the excellent PCBs and assembly. They were instrumental in getting LEMSv2 completed.
-* Thanks to EnviroDIY for their excellent [SDI12 Arduino Library](https://github.com/EnviroDIY/Arduino-SDI-12) library. The only reason this isn't included above in the dependency list is because a customized version is used for LEMSv2.
