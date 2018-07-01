@@ -149,72 +149,49 @@ int DS2::parseDataString(void) {
   char c;
   uint8_t j = 0;
 
-  // Decagon version
-  if (versionCode == "DE") {
-
-    // Iterate through string and get signs and start indices
-    for (int i = 0; i < dsResponse.length(); i++) {
-      c = dsResponse[i];
-      if ( (c == '+') || (c == '-')) {
-        idx[j] = i;
-        if (c == '+') {
-          pos[j] = 1;
-        } else {
-          pos[j] = -1;
-        }
-        j++;
-      } else {
-        continue;
+  // Iterate through string and get signs and start indices
+  for (int i = 0; i < dsResponse.length(); i++) {
+    c = dsResponse[i];
+    if ( (c == '+') || (c == '-')) {
+      idx[j] = i;
+      j++;
+      if (j > 4) {  // Need next separator to end temp substring for atmos 22
+        break;
       }
+    } else {
+      continue;
     }
-
-    // Convert to individual values
-    String wSpdStr = dsResponse.substring(idx[0], idx[1]);
-    String wDirStr = dsResponse.substring(idx[1], idx[2]);
-    String wTmpStr = dsResponse.substring(idx[2]);
-    wSpd = wSpdStr.toFloat();
-    wDir = wDirStr.toFloat();
-    wGst = 0.0/0.0;
-    wTmp = wTmpStr.toFloat();
-
-  } else if (versionCode == "ME") {   // Meter version
-
-    // Iterate through string and get signs and start indices
-    for (int i = 0; i < dsResponse.length(); i++) {
-      c = dsResponse[i];
-      if ( (c == '+') || (c == '-')) {
-        idx[j] = i;
-        if (c == '+') {
-          pos[j] = 1;
-        } else {
-          pos[j] = -1;
-        }
-        j++;
-        if (j > 4) {  // Need next separator to end temp substring
-          break;
-        }
-      } else {
-        continue;
-      }
-    }
-
-    // Convert to individual values - Different order for Atmos 22 than DS2
-    String wSpdStr = dsResponse.substring(idx[0], idx[1]);
-    String wDirStr = dsResponse.substring(idx[1], idx[2]);
-    String wGstStr = dsResponse.substring(idx[2], idx[3]);
-    String wTmpStr = dsResponse.substring(idx[3], idx[4]);
-    wSpd = wSpdStr.toFloat();
-    wDir = wDirStr.toFloat();
-    wGst = wGstStr.toFloat();
-    wTmp = wTmpStr.toFloat();
-
-
-  } else {
-    wSpd = -2.0;
-    wDir = 2000.0;
-    wTmp = -300.15;
-    return 1;
   }
+
+  String wSpdStr;
+  String wDirStr;
+  String wGstStr;
+  String wTmpStr;
+
+  if (versionCode == "DE") {
+    wSpdStr = dsResponse.substring(idx[0], idx[1]);
+    wDirStr = dsResponse.substring(idx[1], idx[2]);
+    wTmpStr = dsResponse.substring(idx[2]);
+  } else if (versionCode == "ME") {
+    wSpdStr = dsResponse.substring(idx[0], idx[1]);
+    wDirStr = dsResponse.substring(idx[1], idx[2]);
+    wGstStr = dsResponse.substring(idx[2], idx[3]);
+    wTmpStr = dsResponse.substring(idx[3], idx[4]);
+  } else {
+    wSpdStr = "-2.0";
+    wDirStr = "2000.0";
+    wGstStr = "-2.5";
+    wTmpStr = "-300.15";
+  }
+
+  wSpd = wSpdStr.toFloat();
+  wDir = wDirStr.toFloat();
+  if (versionCode == "DE") {
+    wGst = 0.0 / 0.0;
+  } else {
+    wGst = wGstStr.toFloat();
+  }
+  wTmp = wTmpStr.toFloat();
 
 
   // Add more checks?

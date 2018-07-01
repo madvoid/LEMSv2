@@ -45,7 +45,6 @@ class DS2 {
     SDI12 ds;
     
     int parseDataString(void);
-    int pos[5];
 
     uint8_t idx[5];
     uint8_t dataPin;
