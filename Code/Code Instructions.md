@@ -1,4 +1,4 @@
-# Instructions
+# Code Instructions
 
 Please read through all instructions before starting!
 
@@ -8,7 +8,7 @@ Please read through all instructions before starting!
 
 3. Ensure that a CR1220 coin cell battery is inserted into the RTC battery holder
 
-4. Plug the LEMSv2 into computer via a micro-USB cable
+4. Plug the LEMSv2 into computer via a micro-USB cable. The board should be set to `SparkFun SAMD21 Dev Breakout`. The board definition should have been installed in step 1. The COM port should be set to whatever COM port the arduino is plugged into.
 
 5. Double press the reset button on the red SAMD21 breakout board. This puts the board in a state where it's waiting for a code to be uploaded
 

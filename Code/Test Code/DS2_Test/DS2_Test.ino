@@ -15,7 +15,7 @@ void setup() {
   SerialUSB.println("Initializing Wind Class");
   anem.begin();
   SerialUSB.println("Press enter to continue...");
-  while(!SerialUSB.available());
+  while (!SerialUSB.available());
   SerialUSB.read();
 }
 
@@ -29,6 +29,8 @@ void loop() {
   SerialUSB.println(anem.wSpd);
   SerialUSB.print("Wind Direction: ");
   SerialUSB.println(anem.wDir);
+  SerialUSB.print("Wind Gust: ");
+  SerialUSB.println(anem.wGst);
   SerialUSB.print("Wind Temperature: ");
   SerialUSB.println(anem.wTmp);
   SerialUSB.println();

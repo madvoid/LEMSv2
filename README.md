@@ -4,12 +4,13 @@ This is the repository for the second version of the LEMS Sensor Stations. Stay 
 ### General TODO
 
 1. Check validity of filenames with more than 8 characters
-2. Decagon, the manufacturer of the 5TM soil sensors, has changed their name to Meter, and the 5TM is now called the ECH20 5TM. The documentation will need to be changed.
+2. Decagon, the manufacturer of the 5TM soil sensors, has changed their name to Meter, and the 5TM is now called the ECH20 5TM. The DS2 is now called the Atmos 22. The documentation will need to be changed and will probably be done slowly.
 3. Major Change: Change the code to read parameters from a text file on the SD card. See if possible to read code from SD card.
 4. Delete or separate "File List" from README? Makes it clunky, hard to keep updated. Goal is for files to self explanatory 
+5. Update DS2 code to use EnviroDIY's SDI12 library instead of custom library
 
 ### PCB TODO
-1. The assembled PCBs work! Anything added here is for future sub-revisions (2.1, 2.2, etc.)
+1. Change the parts in the eagle files for BOM lines 11, 29, 30. These parts were out of stock and were replaced by different parts during manufacturing.
 
 
 
