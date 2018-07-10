@@ -32,13 +32,13 @@
 
 // Sensor Defines: Plugged in sensors should be defined as 1 --------------------------------------
 // TODO: Depreciate Wind
-#define TEMPRH 0
+#define TEMPRH 1
 #define IR 1
 #define UPPERSOIL 1
 #define LOWERSOIL 1
-#define SUNLIGHT 0
+#define SUNLIGHT 1
 #define PRESSURE 1
-#define SONIC 0
+#define SONIC 1
 #define WIND 0
 
 
@@ -100,7 +100,7 @@ const uint8_t deltaT = 10;      // Sampling time - Seconds
 
 // SD Card
 File logfile;                       // File object
-char filename[] = "LEMST_00.CSV";   // Initial filename
+char filename[] = "LEMSA_00.CSV";   // Initial filename
 
 // ADS1115
 Adafruit_ADS1115 ads;
@@ -145,8 +145,8 @@ double wSpd;                         // Wind speed
 
 #if SUNLIGHT
 double rawSun = 0;                       // Float to hold voltage read from ADS1115
-const double liConst = 92.54E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
-const double ampResistor = 36500;        // Exact Resistor Value used by Op-Amp in Ohms
+const double liConst = 62.85E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
+const double ampResistor = 53600;        // Exact Resistor Value used by Op-Amp in Ohms
 double sunlight = 0.0;                   // Converted Value
 #endif
 
@@ -162,6 +162,7 @@ double shtHum;               // Relative humidity values from SHT21
 DS2 sonic(SONIC_PIN, '0');   // Initialize DS2 class
 double sonicDir;             // Wind direction from sonic
 double sonicSpd;             // Wind speed from sonic
+double sonicGst;             // Wind gust from sonic
 double sonicTmp;             // Wind temperature from sonic
 #endif
 
@@ -264,7 +265,7 @@ void setup() {
   pinMode(WSPD_PIN, INPUT_PULLUP);
 #endif
 #if SONIC
-  logfile.print(",Sonic_Dir,Sonic_Spd,Sonic_Tmp");
+  logfile.print(",Sonic_Dir,Sonic_Spd,Sonic_Gst,Sonic_Tmp");
   sonic.begin();
 #endif
 #if SUNLIGHT
@@ -412,6 +413,8 @@ void loop() {
   logfile.print(",");
   logfile.print(sonic.wSpd);
   logfile.print(",");
+  logfile.print(sonic.wGst);
+  logfile.print(",");
   logfile.print(sonic.wTmp);
 #endif
 #if SUNLIGHT
@@ -478,6 +481,8 @@ void loop() {
   SerialUSB.print(sonic.wDir);
   SerialUSB.print(", ");
   SerialUSB.print(sonic.wSpd);
+  SerialUSB.print(", ");
+  SerialUSB.print(sonic.wGst);
   SerialUSB.print(", ");
   SerialUSB.print(sonic.wTmp);
 #endif

@@ -66,89 +66,136 @@
 
 
 // Class Functions --------------------------------------------------------------------------------
-DS2::DS2(uint8_t datPin, char addr): ds(datPin){
+DS2::DS2(uint8_t datPin, char addr): ds(datPin) {
   dataPin = datPin;
   address = address + addr;
 }
 
 
 
-void DS2::begin(void){
+void DS2::begin(void) {
   ds.begin();
+  getVersion();
 }
 
 
 
-int DS2::getMeasurements(void){
-  // Make command to send
-  command = address + "R0!";
-
+void DS2::sendCommand(unsigned int delayTime) {
   // Clear variables for use
   dsResponse = "";
   ds.flush();
 
   // Send command and wait for response
   ds.sendCommand(command);
-  delay(380);               // 380 ms is recommended wait time from my interpretation
-  ds.forceHold();           // 
+  delay(delayTime);
+  ds.forceHold();
 
   // Get bytes from sensor
-  while(ds.available()){
+  while (ds.available()) {
     char c = ds.read();
-    if ( (c != '\n') && (c != '\r') ){
+    if ( (c != '\n') && (c != '\r') ) {
       dsResponse += c;
       delay(5);
     }
   }
+}
+
+
+
+void DS2::getVersion(void) {
+  // Make command to send
+  command = address + "I!";
+
+  // Send command
+  sendCommand(380);   // Don't know recommended time, assume it's immediate but have buffer
+
+  // Trim whitespace
+  dsResponse.trim();
+
+  // Check manufacturer first letter
+  versionCode = dsResponse.substring(3, 5);
+}
+
+
+
+int DS2::getMeasurements(void) {
+  // Make command to send
+  command = address + "R0!";
+
+  // Send command
+  sendCommand(380);   // 380 ms is recommended wait time
 
   // Parse string
   parseDataString();
-  
+
   return 0;
 }
 
 
 
-int DS2::parseDataString(void){
+int DS2::parseDataString(void) {
   // Ensure whitespace is removed
   dsResponse.trim();
 
   // Simple error check - add more checks?
-  if (dsResponse.length() < 3){
+  if (dsResponse.length() < 3) {
     wSpd = -1.0;
     wDir = 1000.0;
     wTmp = -273.15;
     return 1;
   }
 
-  // Iterate through string and get signs and start indices
+  // Initialize variables
   char c;
   uint8_t j = 0;
-  for(int i = 0; i < dsResponse.length(); i++){
+
+  // Iterate through string and get signs and start indices
+  for (int i = 0; i < dsResponse.length(); i++) {
     c = dsResponse[i];
-    if( (c == '+') || (c == '-')){
+    if ( (c == '+') || (c == '-')) {
       idx[j] = i;
-      if(c == '+'){
-        pos[j] = 1;
-      } else{
-        pos[j] = -1;
-      }
       j++;
-    }else{
+      if (j > 4) {  // Need next separator to end temp substring for atmos 22
+        break;
+      }
+    } else {
       continue;
     }
   }
 
-  // Convert to individual values
-  String wSpdStr = dsResponse.substring(idx[0], idx[1]);
-  String wDirStr = dsResponse.substring(idx[1], idx[2]);
-  String wTmpStr = dsResponse.substring(idx[2]);
-  wSpd = wSpdStr.toFloat()*pos[0];
-  wDir = wDirStr.toFloat()*pos[1];
-  wTmp = wTmpStr.toFloat()*pos[2];
+  String wSpdStr;
+  String wDirStr;
+  String wGstStr;
+  String wTmpStr;
+
+  if (versionCode == "DE") {
+    wSpdStr = dsResponse.substring(idx[0], idx[1]);
+    wDirStr = dsResponse.substring(idx[1], idx[2]);
+    wTmpStr = dsResponse.substring(idx[2]);
+  } else if (versionCode == "ME") {
+    wSpdStr = dsResponse.substring(idx[0], idx[1]);
+    wDirStr = dsResponse.substring(idx[1], idx[2]);
+    wGstStr = dsResponse.substring(idx[2], idx[3]);
+    wTmpStr = dsResponse.substring(idx[3], idx[4]);
+  } else {
+    wSpdStr = "-2.0";
+    wDirStr = "2000.0";
+    wGstStr = "-2.5";
+    wTmpStr = "-300.15";
+  }
+
+  wSpd = wSpdStr.toFloat();
+  wDir = wDirStr.toFloat();
+  if (versionCode == "DE") {
+    wGst = 0.0 / 0.0;
+  } else {
+    wGst = wGstStr.toFloat();
+  }
+  wTmp = wTmpStr.toFloat();
+
 
   // Add more checks?
-  
+
   return 0;
 }
 
