@@ -56,18 +56,25 @@
 #define GREEN_LED_PIN 6     // Green LED pin
 #define RED_LED_PIN 7       // Red LED pin
 #define BLUE_LED_PIN 13     // Built-in Blue LED - Sparkfun SAMD21 Dev Board
+
 #define CARDSELECT 5        // SD  card chip select pin
 #define RTC_ALARM_PIN 9     // DS3231 Alarm pin
-#define WDIR_PIN A4         // Davis wind direction pin
 #define BAT_PIN A5          // Battery resistor div. pin
+#define FAN_PIN 11          // Pin for cooling fan
+
+#define WDIR_PIN A4         // Davis wind direction pin
 #define WSPD_PIN 8          // Davis wind speed pin
+
 #define USOIL_POW_PIN 2     // 5TM Power Pin, Upper - White 5TM Wire
 #define LSOIL_POW_PIN 38    // 5TM Power Pin, Lower - White 5TM Wire
 #define USOIL_SER Serial1   // 5TM Serial Port, Upper RX = D0, TX = D1; Red 5TM Wire
 #define LSOIL_SER Serial    // 5TM Serial Port, Lower RX = D31, TX = D30; Red 5TM Wire
-#define FAN_PIN 11          // Pin for cooling fan
-#define ADC_RES 12          // Number of bits ADC has
+
 #define SONIC_PIN 10        // DS2 Data Pin, Red DS2 Wire
+
+#define ADC_RES 12          // Number of bits Arduino ADC has
+#define ADS_LI200_PIN 0     // LiCor Li200 pin on ADS1115
+#define ADS_VCC_PIN 1       // VCC pin on ADS1115
 
 
 
@@ -324,7 +331,7 @@ void loop() {
 
   // Gather Measurements
   DateTime now = rtc.now();
-  vcc = ads.readADC_SingleEnded_V(1);
+  vcc = ads.readADC_SingleEnded_V(ADS_VCC_PIN);       // VCC connected to AIN1
   vBat = double(analogRead(BAT_PIN)) * (vcc / pow(2, ADC_RES)) * double(R1 + R2) / double(R2);
 #if IR
   mlxIR = mlx.readObjectTempC();
@@ -341,7 +348,7 @@ void loop() {
   pressure = bmp.readPressure();
 #endif
 #if SUNLIGHT
-  rawSun = ads.readADC_SingleEnded_V(0);                     // LiCor Amplifier connected to AIN0
+  rawSun = ads.readADC_SingleEnded_V(ADS_LI200_PIN);                     // LiCor Amplifier connected to AIN0
   sunlight = rawSun * (1.0 / ampResistor) * (1.0 / liConst); // Convert to W/m^2
 #endif
 #if TEMPRH
