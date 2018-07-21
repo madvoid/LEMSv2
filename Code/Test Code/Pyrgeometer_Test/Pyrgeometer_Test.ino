@@ -10,6 +10,7 @@
 #define ADC_RES 12          // Number of bits Arduino ADC has
 #define ADS_VCC_PIN 1       // VCC pin on ADS1115
 #define THERM_PIN A3        // SL-610 Thermistor output
+#define THERM_POW 3         // Thermistor power pin
 // Positive thermopile pin is in AIN2, negative in AIN3. Serial Number: SL-610-SS_1034 !! USES NEW WIRING COLORS !!
 
 // BMP280
@@ -25,16 +26,19 @@ double vcc;               // VCC
 double thermV;            // Voltage reading from arduino ADC for thermistor (volts)
 double Rt;                // Thermistor resistance (ohm)
 double thermTemp;         // Temperature as measured by thermistor (Kelvin)
-double Agz = 9.32794e-4;  // Greater than 0 C thermistor constants
-double Bgz = 2.21451e-4;  // "
-double Cgz = 1.26233e-7;  // "
-double Alz = 9.32960e-4;  // Less than 0 C thermistor constants
-double Blz = 2.21424e-4;  // "
-double Clz = 1.26329e-7;  // "
+double Agz = 9.32793534266128e-4;  // Greater than 0 C thermistor constants
+double Bgz = 2.21450736014070e-4;  // "
+double Cgz = 1.26232582309837e-7;  // "
+double Alz = 9.32959957496852e-4;  // Less than 0 C thermistor constants
+double Blz = 2.21423593265217e-4;  // "
+double Clz = 1.26328669787011e-7;  // "
+unsigned int rawTemp = 0;          // Analog read from thermistor
 
 // Thermopile Constants & variables
-double k1 = 9.712;     // Wm^-2 per mV
-double k2 = 1.028;     // Unitless
+//double k1 = 9.712;     // Wm^-2 per mV - Serial number 1034
+//double k2 = 1.028;     // Unitless - Serial number 1034
+double k1 = 10.023;      // Serial number 1038
+double k2 = 1.020;       // "
 double pilemV;         // Voltage from thermopile
 double LWi;            // Incoming longwave radiation
 
@@ -46,6 +50,9 @@ void setup(void) {
   SerialUSB.println("Starting Test");
 
   analogReadResolution(ADC_RES);                // Set arduino resolution to 12 bit - only works on ARM arduino boards
+
+  pinMode(THERM_POW, OUTPUT);
+  digitalWrite(THERM_POW, LOW);
 
   bmp.begin();                  // Start BMP280
 
@@ -66,10 +73,13 @@ void loop(void) {
   approxAlt = bmp.readAltitude(1013.25);              // Technically should be adjusted to local sea level pressure
 
   // Read thermistor
-  thermV = double(analogRead(THERM_PIN)) / (pow(2,ADC_RES)-1) * vcc;
+  digitalWrite(THERM_POW, HIGH);
+  rawTemp = analogRead(THERM_PIN);
+  digitalWrite(THERM_POW, LOW);
+  thermV = double(rawTemp) / (pow(2,ADC_RES)-1) * vcc;
   Rt = 24900.0 * thermV / (vcc - thermV);
   if(bmpAmb >= 0){
-    thermTemp = 1.0 / (Agz + Bgz*log(Rt) + Cgz*pow(log(Rt), 3));  
+    thermTemp = 1.0 / (Agz + Bgz*log(Rt) + Cgz*pow(log(Rt), 3));    // Steinhart-hart Equation
   } else {
     thermTemp = 1.0 / (Alz + Blz*log(Rt) + Clz*pow(log(Rt), 3));   
   }
@@ -83,8 +93,8 @@ void loop(void) {
   SerialUSB.println(approxAlt);
   SerialUSB.print("VCC: ");
   SerialUSB.println(vcc);
-  SerialUSB.print("Thermistor temperature (K): ");
-  SerialUSB.println(thermTemp);
+  SerialUSB.print("Thermistor temperature (C): ");
+  SerialUSB.println(thermTemp - 273.15);
   SerialUSB.print("Thermopile voltage (mV): ");
   SerialUSB.println(pilemV, 6);
   SerialUSB.print("Longwave Radiation (Wm^-2): ");
