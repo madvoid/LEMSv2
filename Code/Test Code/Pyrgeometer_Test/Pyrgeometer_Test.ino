@@ -37,8 +37,8 @@ unsigned int rawTemp = 0;          // Analog read from thermistor
 // Thermopile Constants & variables
 //double k1 = 9.712;     // Wm^-2 per mV - Serial number 1034
 //double k2 = 1.028;     // Unitless - Serial number 1034
-double k1 = 10.023;      // Serial number 1038
-double k2 = 1.020;       // "
+double k1 = 9.786;      // Serial number 1076
+double k2 = 1.031;       // "
 double pilemV;         // Voltage from thermopile
 double LWi;            // Incoming longwave radiation
 

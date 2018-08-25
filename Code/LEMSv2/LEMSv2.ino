@@ -32,14 +32,15 @@
 
 // Sensor Defines: Plugged in sensors should be defined as 1 --------------------------------------
 // TODO: Depreciate Wind
-#define TEMPRH 1
-#define IR 1
-#define UPPERSOIL 1
-#define LOWERSOIL 1
-#define SUNLIGHT 1
+#define TEMPRH 0
+#define IR 0
+#define UPPERSOIL 0
+#define LOWERSOIL 0
+#define SUNLIGHT 0
 #define PRESSURE 1
-#define SONIC 1
+#define SONIC 0
 #define WIND 0
+#define PYRGEOMETER 1
 
 
 
@@ -76,6 +77,14 @@
 #define ADS_LI200_PIN 0     // LiCor Li200 pin on ADS1115
 #define ADS_VCC_PIN 1       // VCC pin on ADS1115
 
+#define THERM_PIN A3        // SL-610 Thermistor output
+#define THERM_POW 3         // Thermistor power pin
+// Positive thermopile pin is in AIN2, negative in AIN3.
+// Serial Number: SL-610-SS_1034 !! USES NEW WIRING COLORS !!
+// OR
+// Serial Number: SL-510-SS_1076 !! USES NEW WIRING COLORS !!
+
+
 
 
 
@@ -107,7 +116,7 @@ const uint8_t deltaT = 10;      // Sampling time - Seconds
 
 // SD Card
 File logfile;                       // File object
-char filename[] = "LEMSA_00.CSV";   // Initial filename
+char filename[] = "LEMSP_00.CSV";   // Initial filename
 
 // ADS1115
 Adafruit_ADS1115 ads;
@@ -140,6 +149,7 @@ d5TM lowerSoil(LSOIL_SER, 1200, LSOIL_POW_PIN); // Initialize 5TM class
 Adafruit_BMP280 bmp;         // Initialize BMP280 class
 double pressure;             // Barometric pressure
 double bmpAmb;               // Temperature from BMP280
+double approxAlt;            // Approximate altitude from BMP280
 #endif
 
 // Wind
@@ -152,8 +162,8 @@ double wSpd;                         // Wind speed
 
 #if SUNLIGHT
 double rawSun = 0;                       // Float to hold voltage read from ADS1115
-const double liConst = 62.85E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
-const double ampResistor = 53600;        // Exact Resistor Value used by Op-Amp in Ohms
+const double liConst = 86.06E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
+const double ampResistor = 39200;        // Exact Resistor Value used by Op-Amp in Ohms
 double sunlight = 0.0;                   // Converted Value
 #endif
 
@@ -171,6 +181,30 @@ double sonicDir;             // Wind direction from sonic
 double sonicSpd;             // Wind speed from sonic
 double sonicGst;             // Wind gust from sonic
 double sonicTmp;             // Wind temperature from sonic
+#endif
+
+// Pyrgeometer
+#if PYRGEOMETER
+
+// Thermistor variables
+double thermV;            // Voltage reading from arduino ADC for thermistor (volts)
+double Rt;                // Thermistor resistance (ohm)
+double thermTemp;         // Temperature as measured by thermistor (Kelvin)
+double Agz = 9.32793534266128e-4;  // Greater than 0 C thermistor constants
+double Bgz = 2.21450736014070e-4;  // "
+double Cgz = 1.26232582309837e-7;  // "
+double Alz = 9.32959957496852e-4;  // Less than 0 C thermistor constants
+double Blz = 2.21423593265217e-4;  // "
+double Clz = 1.26328669787011e-7;  // "
+unsigned int rawTemp = 0;          // Analog read from thermistor
+
+// Thermopile Constants & variables
+//double k1 = 9.712;     // Wm^-2 per mV - Serial number 1034
+//double k2 = 1.028;     // Unitless - Serial number 1034
+double k1 = 9.786;      // Serial number 1076
+double k2 = 1.031;       // "
+double pilemV;         // Voltage from thermopile
+double LWi;            // Incoming longwave radiation
 #endif
 
 
@@ -212,9 +246,9 @@ void setup() {
 
   // Disable USB device to avoid USB interrupts. Necessitates double press of reset button to upload though
   // This is only needed when DEBUG is 0, AND you want to power the LEMSv2 from USB power for some reason
-//  #if !DEBUG
-//    USBDevice.detach();
-//  #endif
+  //  #if !DEBUG
+  //    USBDevice.detach();
+  //  #endif
 
   // RTC Setup
   if (!rtc.begin()) {
@@ -277,6 +311,11 @@ void setup() {
 #endif
 #if SUNLIGHT
   logfile.print(",Sunlight");
+#endif
+#if PYRGEOMETER
+  pinMode(THERM_POW, OUTPUT);
+  digitalWrite(THERM_POW, LOW);
+  logfile.print(",Longwave,Thermistor_Tmp");
 #endif
 #if TEMPRH
   sht.begin(0x44);    // Set to 0x45 for alt. i2c address
@@ -358,6 +397,30 @@ void loop() {
 #if SONIC
   sonic.getMeasurements();
 #endif
+#if PYRGEOMETER
+  ads.setGain(GAIN_SIXTEEN);
+
+  // Read thermistor temperature
+  digitalWrite(THERM_POW, HIGH);
+  rawTemp = analogRead(THERM_PIN);
+  digitalWrite(THERM_POW, LOW);
+  thermV = double(rawTemp) / (pow(2, ADC_RES) - 1) * vcc;
+  Rt = 24900.0 * thermV / (vcc - thermV);
+  if (Rt >= 94980) { // If greater than this value, means temp is less than zero
+    thermTemp = 1.0 / (Alz + Blz * log(Rt) + Clz * pow(log(Rt), 3));
+  } else {
+    thermTemp = 1.0 / (Agz + Bgz * log(Rt) + Cgz * pow(log(Rt), 3));
+  }
+
+  // Read thermopile
+  pilemV = ads.readADC_Differential_2_3_V() * 1000.0; // Positive thermopile pin is in AIN2, negative in AIN3.
+  LWi = k1 * pilemV + k2 * 5.6704e-8 * pow(thermTemp, 4);
+
+  // Convert to Celsius
+  thermTemp = thermTemp - 273.15;
+
+  ads.setGain(GAIN_ONE);
+#endif
 #if WIND
   wDir = (double)analogRead(WDIR_PIN) * 360.0 / pow(2, ADC_RES);  // Map from analog count to 0-360, with 360=North
   startTime = millis();
@@ -428,6 +491,12 @@ void loop() {
   logfile.print(",");
   logfile.print(sunlight);
 #endif
+#if PYRGEOMETER
+  logfile.print(",");
+  logfile.print(LWi);
+  logfile.print(",");
+  logfile.print(thermTemp);
+#endif
 #if TEMPRH
   logfile.print(",");
   logfile.print(shtAmb);
@@ -496,6 +565,12 @@ void loop() {
 #if SUNLIGHT
   SerialUSB.print(", ");
   SerialUSB.print(sunlight);
+#endif
+#if PYRGEOMETER
+  SerialUSB.print(", ");
+  SerialUSB.print(LWi);
+  SerialUSB.print(", ");
+  SerialUSB.print(thermTemp);
 #endif
 #if TEMPRH
   SerialUSB.print(", ");
