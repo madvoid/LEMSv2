@@ -32,15 +32,15 @@
 
 // Sensor Defines: Plugged in sensors should be defined as 1 --------------------------------------
 // TODO: Depreciate Wind
-#define TEMPRH 0
-#define IR 0
-#define UPPERSOIL 0
-#define LOWERSOIL 0
-#define SUNLIGHT 0
+#define TEMPRH 1
+#define IR 1
+#define UPPERSOIL 1
+#define LOWERSOIL 1
+#define SUNLIGHT 1
 #define PRESSURE 1
-#define SONIC 0
+#define SONIC 1
 #define WIND 0
-#define PYRGEOMETER 1
+#define PYRGEOMETER 0
 
 
 
@@ -116,7 +116,7 @@ const uint8_t deltaT = 10;      // Sampling time - Seconds
 
 // SD Card
 File logfile;                       // File object
-char filename[] = "LEMSP_00.CSV";   // Initial filename
+char filename[] = "LEMST_00.CSV";   // Initial filename - Whatever this is named, the filename should be 8 characters long and the last two should be digits!
 
 // ADS1115
 Adafruit_ADS1115 ads;
@@ -162,8 +162,8 @@ double wSpd;                         // Wind speed
 
 #if SUNLIGHT
 double rawSun = 0;                       // Float to hold voltage read from ADS1115
-const double liConst = 86.06E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
-const double ampResistor = 39200;        // Exact Resistor Value used by Op-Amp in Ohms
+const double liConst = 57.80E-6 / 1000;  // Licor Calibration Constant. Units of (Amps/(W/m^2))
+const double ampResistor = 59000;        // Exact Resistor Value used by Op-Amp in Ohms
 double sunlight = 0.0;                   // Converted Value
 #endif
 
@@ -199,10 +199,10 @@ double Clz = 1.26328669787011e-7;  // "
 unsigned int rawTemp = 0;          // Analog read from thermistor
 
 // Thermopile Constants & variables
-//double k1 = 9.712;     // Wm^-2 per mV - Serial number 1034
-//double k2 = 1.028;     // Unitless - Serial number 1034
-double k1 = 9.786;      // Serial number 1076
-double k2 = 1.031;       // "
+double k1 = 9.712;     // Wm^-2 per mV - Serial number 1034
+double k2 = 1.028;     // Unitless - Serial number 1034
+//double k1 = 9.786;      // Serial number 1076
+//double k2 = 1.031;       // "
 double pilemV;         // Voltage from thermopile
 double LWi;            // Incoming longwave radiation
 #endif
@@ -315,7 +315,7 @@ void setup() {
 #if PYRGEOMETER
   pinMode(THERM_POW, OUTPUT);
   digitalWrite(THERM_POW, LOW);
-  logfile.print(",Longwave,Thermistor_Tmp");
+  logfile.print(",Longwave,Thermistor_Tmp,Pile_mV,thermV");
 #endif
 #if TEMPRH
   sht.begin(0x44);    // Set to 0x45 for alt. i2c address
@@ -496,6 +496,10 @@ void loop() {
   logfile.print(LWi);
   logfile.print(",");
   logfile.print(thermTemp);
+  logfile.print(",");
+  logfile.print(pilemV,6);
+  logfile.print(",");
+  logfile.print(thermV,6);
 #endif
 #if TEMPRH
   logfile.print(",");
